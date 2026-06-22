@@ -54,8 +54,6 @@ const DEFAULT_RESOURCES = [
   { title: 'MoonTV', description: '免费的在线视频网站。', category: 'video', icon: 'fa-solid fa-circle-play', url: 'https://moon.qyun.nyc.mn' },
   { title: '域名邮箱', description: '可长期使用的免费域名邮箱。', category: 'email', icon: 'fa-solid fa-envelope', url: 'https://mail.v360.pp.ua/' },
   { title: '兰空图床', description: '二开美化的兰空图床。', category: 'images', icon: 'fa-solid fa-images', url: 'https://img.811520.xyz' },
-  { title: '短链生成', description: '一个简单易用的短链接生成器。', category: 'links', icon: 'fa-solid fa-link', url: 'https://v1.us.ci/yutian81' },
-  { title: 'WebSSH', description: '在线SSH连接工具。', category: 'ssh', icon: 'fa-solid fa-crosshairs', url: 'https://ssh.yuzong.nyc.mn' },
   { title: '订阅转换', description: '在线订阅转换工具，支持 clash、sing-box 等格式。', category: 'sub', icon: 'fa-solid fa-arrows-to-dot', url: 'https://sub.ccwu.cc' },
   { title: '优选订阅', description: '精选大量优质中转IP，加速你的CF节点。', category: 'sub', icon: 'fa-solid fa-diagram-next', url: 'https://sub.ais.sld.tw/sub' },
   { title: '封面制作', description: '为博客文章制作精美的封面。', category: 'images', icon: 'fa-solid fa-layer-group', url: 'https://cover.811520.xyz' },

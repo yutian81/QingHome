@@ -180,14 +180,14 @@ function AdminDashboard() {
   };
 
   const TABS = [
-    { id: 'profile', label: '📋 资料' },
-    { id: 'stats', label: '📊 统计' },
-    { id: 'nav', label: '🧭 导航' },
-    { id: 'blog', label: '📝 博客' },
-    { id: 'projects', label: '💻 项目' },
-    { id: 'resources', label: '🔗 资源' },
-    { id: 'socials', label: '🌐 社交' },
-    { id: 'password', label: '🔑 密码' },
+    { id: 'profile', label: '资料', icon: 'fa-solid fa-user' },
+    { id: 'stats', label: '统计', icon: 'fa-solid fa-chart-simple' },
+    { id: 'nav', label: '导航', icon: 'fa-solid fa-bars' },
+    { id: 'blog', label: '博客', icon: 'fa-solid fa-feather' },
+    { id: 'projects', label: '项目', icon: 'fa-solid fa-code' },
+    { id: 'resources', label: '资源', icon: 'fa-solid fa-link' },
+    { id: 'socials', label: '社交', icon: 'fa-solid fa-share-nodes' },
+    { id: 'password', label: '密码', icon: 'fa-solid fa-key' },
   ];
 
   const refreshSection = async () => { await loadAll(); refresh(); };
@@ -202,7 +202,7 @@ function AdminDashboard() {
         <nav>
           {TABS.map(t => (
             <button key={t.id} className={`admin-nav-btn ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
-              {t.label}
+              <i className={t.icon} style={{width:18,textAlign:'center',marginRight:6}} /> {t.label}
             </button>
           ))}
         </nav>
