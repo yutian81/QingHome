@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler deploy",
-    "cf:dev": "npm run build && wrangler dev"
+    "dev:local": "npm run build && wrangler dev --local",
+    "db:local": "wrangler d1 execute qinghome-db --local --file=schema.sql"
   },
   "dependencies": {
     "react": "^18.3.1",

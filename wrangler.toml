@@ -1,11 +1,11 @@
-name = "qinghome2"
+name = "qinghome"
 main = "worker/index.js"
 compatibility_date = "2024-12-01"
 
-# D1 数据库（Wrangler v4 自动解析名称）
+# D1 数据库（Wrangler v4 自动解析ID）
 [[d1_databases]]
 binding = "DB"
-database_name = "qinghome2"
+database_name = "qinghome-db"
 
 # 静态资源托管（Vite 构建产物）
 [assets]
