@@ -352,13 +352,13 @@ async function logout(request, env) {
 
 async function getPublicConfig(env) {
   const db = env.DB;
-  const profile = await db.prepare('SELECT name,brand,avatar,title,tagline,bio,email,status FROM profile LIMIT 1').first();
-  const stats = (await db.prepare('SELECT label,value,icon FROM stats ORDER BY sort_order ASC, id ASC').all()).results;
-  const navItems = (await db.prepare('SELECT label,icon,section_id FROM nav_items ORDER BY sort_order ASC, id ASC').all()).results;
-  const blogPosts = (await db.prepare('SELECT title,excerpt,date,tags,url FROM blog_posts ORDER BY sort_order ASC, id ASC').all()).results;
-  const projects = (await db.prepare('SELECT name,description,tags,stars,language,language_color,url,icon FROM projects ORDER BY sort_order ASC, id ASC').all()).results;
-  const resources = (await db.prepare('SELECT title,description,category,icon,url FROM resources ORDER BY sort_order ASC, id ASC').all()).results;
-  const socials = (await db.prepare('SELECT name,handle,url,icon FROM socials ORDER BY sort_order ASC, id ASC').all()).results;
+  const profile = await db.prepare('SELECT * FROM profile LIMIT 1').first();
+  const stats = (await db.prepare('SELECT * FROM stats ORDER BY sort_order ASC, id ASC').all()).results;
+  const navItems = (await db.prepare('SELECT * FROM nav_items ORDER BY sort_order ASC, id ASC').all()).results;
+  const blogPosts = (await db.prepare('SELECT * FROM blog_posts ORDER BY sort_order ASC, id ASC').all()).results;
+  const projects = (await db.prepare('SELECT * FROM projects ORDER BY sort_order ASC, id ASC').all()).results;
+  const resources = (await db.prepare('SELECT * FROM resources ORDER BY sort_order ASC, id ASC').all()).results;
+  const socials = (await db.prepare('SELECT * FROM socials ORDER BY sort_order ASC, id ASC').all()).results;
   return json({
     profile: profile || DEFAULT_PROFILE,
     stats: stats.length ? stats : DEFAULT_STATS,
