@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import * as api from '../api.js';
+import { FaIcon } from '../components/Icons.jsx';
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -58,56 +59,56 @@ export default function Login() {
     }
   };
 
-  if (checking) return <div className="admin-loading"><i className="fa-solid fa-spinner fa-spin" style={{marginRight:8}} />加载中…</div>;
+  if (checking) return <div className="admin-loading"><FaIcon icon="fa-solid fa-spinner fa-spin" size={15} /><span style={{marginLeft:8}}>加载中…</span></div>;
 
   return (
     <div className="admin-login-page">
       <div className="admin-login-card">
         {mode === 'register' ? (
           <>
-            <h1><i className="fa-solid fa-rocket" style={{marginRight:8}} />创建管理员</h1>
+            <h1><FaIcon icon="fa-solid fa-rocket" size={22} /> 创建管理员</h1>
             <p className="admin-login-sub">首次使用，请设置管理员账号和密码</p>
-            {error && <div className="admin-msg error"><i className="fa-solid fa-circle-exclamation" style={{marginRight:6}} />{error}</div>}
+            {error && <div className="admin-msg error"><FaIcon icon="fa-solid fa-circle-exclamation" size={14} /> {error}</div>}
             <form onSubmit={handleRegister}>
               <div className="admin-field">
-                <label><i className="fa-solid fa-user" style={{width:16,marginRight:6}} />用户名</label>
+                <label><FaIcon icon="fa-solid fa-user" size={14} /> 用户名</label>
                 <input type="text" value={regUser} onChange={e => setRegUser(e.target.value)} required autoFocus />
               </div>
               <div className="admin-field">
-                <label><i className="fa-solid fa-lock" style={{width:16,marginRight:6}} />密码</label>
+                <label><FaIcon icon="fa-solid fa-lock" size={14} /> 密码</label>
                 <input type="password" value={regPass} onChange={e => setRegPass(e.target.value)} required placeholder="至少 6 位" />
               </div>
               <div className="admin-field">
-                <label><i className="fa-solid fa-check" style={{width:16,marginRight:6}} />确认密码</label>
+                <label><FaIcon icon="fa-solid fa-check" size={14} /> 确认密码</label>
                 <input type="password" value={regConfirm} onChange={e => setRegConfirm(e.target.value)} required />
               </div>
               <button type="submit" className="admin-btn primary" disabled={busy}>
-                {busy ? <><i className="fa-solid fa-spinner fa-spin" /> 创建中…</> : <><i className="fa-solid fa-rocket" /> 创建管理员并登录</>}
+                {busy ? <><FaIcon icon="fa-solid fa-spinner fa-spin" size={14} /> 创建中…</> : <><FaIcon icon="fa-solid fa-rocket" size={14} /> 创建管理员并登录</>}
               </button>
             </form>
           </>
         ) : (
           <>
-            <h1><i className="fa-solid fa-lock" style={{marginRight:8}} />管理后台</h1>
+            <h1><FaIcon icon="fa-solid fa-lock" size={22} /> 管理后台</h1>
             <p className="admin-login-sub">请输入管理员账号密码登录</p>
-            {error && <div className="admin-msg error"><i className="fa-solid fa-circle-exclamation" style={{marginRight:6}} />{error}</div>}
+            {error && <div className="admin-msg error"><FaIcon icon="fa-solid fa-circle-exclamation" size={14} /> {error}</div>}
             <form onSubmit={handleLogin}>
               <div className="admin-field">
-                <label><i className="fa-solid fa-user" style={{width:16,marginRight:6}} />用户名</label>
+                <label><FaIcon icon="fa-solid fa-user" size={14} /> 用户名</label>
                 <input type="text" value={username} onChange={e => setUsername(e.target.value)} required autoFocus />
               </div>
               <div className="admin-field">
-                <label><i className="fa-solid fa-lock" style={{width:16,marginRight:6}} />密码</label>
+                <label><FaIcon icon="fa-solid fa-lock" size={14} /> 密码</label>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
               </div>
               <button type="submit" className="admin-btn primary" disabled={busy}>
-                {busy ? <><i className="fa-solid fa-spinner fa-spin" /> 登录中…</> : <><i className="fa-solid fa-right-to-bracket" style={{marginRight:6}} />登录</>}
+                {busy ? <><FaIcon icon="fa-solid fa-spinner fa-spin" size={14} /> 登录中…</> : <><FaIcon icon="fa-solid fa-right-to-bracket" size={14} /> 登录</>}
               </button>
             </form>
           </>
         )}
         <p className="admin-login-footer">
-          <Link to="/"><i className="fa-solid fa-arrow-left" style={{marginRight:6}} />返回首页</Link>
+          <Link to="/"><FaIcon icon="fa-solid fa-arrow-left" size={12} /> 返回首页</Link>
         </p>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useSite } from '../context/SiteContext.jsx';
 import * as api from '../api.js';
+import { FaIcon } from '../components/Icons.jsx';
 import '../styles/admin.css';
 
 /* ──── 表单输入 ──── */
@@ -63,9 +64,9 @@ function ListEditor({ items, columns, title, icon, onAdd, onUpdate, onDelete }) 
   return (
     <div className="admin-section">
       <div className="admin-section-header">
-        <h3>{icon && <i className={icon} style={{width:18,textAlign:'center',marginRight:6}} />}{title}</h3>
-        <button className="admin-btn small" onClick={startAdd}>＋ 新增</button>
-      </div>
+              <h3>{icon && <><FaIcon icon={icon} size={15} /> {title}</>}</h3>
+              <button className="admin-btn small" onClick={startAdd}><FaIcon icon="fa-solid fa-plus" size={12} /> 新增</button>
+            </div>
 
       {editing && (
         <div className="admin-edit-panel">
@@ -142,7 +143,7 @@ function ChangePassword() {
 
   return (
     <div className="admin-section">
-      <div className="admin-section-header"><h3><i className="fa-solid fa-key" style={{marginRight:8}} /> 修改密码</h3></div>
+      <div className="admin-section-header"><h3><FaIcon icon="fa-solid fa-key" size={15} /> 修改密码</h3></div>
       {error && <div className="admin-msg error">{error}</div>}
       {msg && <div className="admin-msg success">{msg}</div>}
       <form onSubmit={handleSubmit} style={{ maxWidth: 420 }}>
@@ -216,13 +217,13 @@ function AdminDashboard() {
         <nav>
           {TABS.map(t => (
             <button key={t.id} className={`admin-nav-btn ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
-              <i className={t.icon} style={{width:18,textAlign:'center',marginRight:6}} /> {t.label}
+              <FaIcon icon={t.icon} size={14} /> {t.label}
             </button>
           ))}
         </nav>
         <div className="admin-sidebar-bottom">
-          <Link to="/" className="admin-nav-btn"><i className="fa-solid fa-house" style={{width:18,textAlign:'center',marginRight:6}} /> 查看首页</Link>
-          <button className="admin-nav-btn" onClick={logout}><i className="fa-solid fa-right-from-bracket" style={{width:18,textAlign:'center',marginRight:6}} /> 退出登录</button>
+          <Link to="/" className="admin-nav-btn"><FaIcon icon="fa-solid fa-house" size={15} /> 查看首页</Link>
+          <button className="admin-nav-btn" onClick={logout}><FaIcon icon="fa-solid fa-right-from-bracket" size={15} /> 退出登录</button>
         </div>
       </aside>
 
@@ -232,7 +233,7 @@ function AdminDashboard() {
         {/* 个人资料 */}
         {tab === 'profile' && (
                   <div className="admin-section">
-                    <div className="admin-section-header"><h3><i className="fa-solid fa-user" style={{marginRight:8}} /> 个人资料</h3></div>
+                    <div className="admin-section-header"><h3><FaIcon icon="fa-solid fa-user" size={15} /> 个人资料</h3></div>
                     {!profile && <p style={{color:'var(--text-dim)',marginBottom:16}}>暂无数据，请先填写保存</p>}
                     <div className="admin-form-grid">
                       <F label="名称" value={profile?.name || ''} onChange={v => setProfile(p => ({ ...p || {}, name: v }))} placeholder="例如：青云志主页" />
@@ -287,7 +288,7 @@ function AdminDashboard() {
               { key: 'date', label: '日期', type: 'date' },
               { key: 'url', label: '链接', placeholder: 'https://…' },
               { key: 'tags', label: '标签', placeholder: 'Cloudflare,Domain' },
-              { key: 'excerpt', label: '摘要', rows: 2, placeholder: '文章摘要内容…', fullWidth: true },
+              { key: 'excerpt', label: '摘要', rows: 2, placeholder: '文章摘要内容…' },
             ]}
             onAdd={async d => { await api.addBlog(d); await refreshSection(); show('已添加'); }}
             onUpdate={async (id, d) => { await api.updateBlog(id, d); await refreshSection(); show('已更新'); }}
@@ -304,7 +305,7 @@ function AdminDashboard() {
               { key: 'icon', label: '图标 Class', placeholder: 'fa-brands fa-github' },
               { key: 'stars', label: 'Stars', type: 'number', placeholder: '99' },
               { key: 'language', label: '语言', placeholder: 'JavaScript' },
-              { key: 'language_color', label: '语言色', type: 'color', placeholder: '#3178c6' },
+              { key: 'language_color', label: '语言色', type: 'color-text', placeholder: '#3178c6' },
               { key: 'url', label: '链接', placeholder: 'https://github.com/…' },
               { key: 'description', label: '摘要', rows: 2, placeholder: '项目描述…' },
             ]}
@@ -322,7 +323,7 @@ function AdminDashboard() {
               { key: 'category', label: '分类', placeholder: 'nav / video / images' },
               { key: 'url', label: '链接', placeholder: 'https://…' },
               { key: 'icon', label: '图标 Class', placeholder: 'fa-solid fa-compass' },
-              { key: 'description', label: '描述', rows: 2, placeholder: '站点描述…', fullWidth: true },
+              { key: 'description', label: '描述', rows: 2, placeholder: '站点描述…' },
             ]}
             onAdd={async d => { await api.addResource(d); await refreshSection(); show('已添加'); }}
             onUpdate={async (id, d) => { await api.updateResource(id, d); await refreshSection(); show('已更新'); }}
