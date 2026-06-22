@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSite } from '../context/SiteContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
-import FaIcon from './Icons.jsx';
+import { FaIcon, IconSun, IconMoon, IconMenu, IconClose } from './Icons.jsx';
 
 export default function Header() {
   const { config } = useSite();
@@ -42,41 +42,42 @@ export default function Header() {
   };
 
   return (
-    <header className={`header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="container header-inner">
-        <a href="/" className="header-brand" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-          {brand}
+    <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
+      <div className="header__inner">
+        <a href="/" className="header__brand" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+          <span className="header__logo">{brand.charAt(0)}</span>
+          <span className="header__name">{brand}</span>
         </a>
 
-        <nav className={`header-nav ${menuOpen ? 'open' : ''}`}>
+        <nav className={`header__nav ${menuOpen ? 'is-open' : ''}`}>
           {nav.map(item => (
-            <button key={item.section_id || item.id} className="header-nav-link" onClick={() => scrollTo(item.section_id)}>
-              <FaIcon icon={item.icon} />
+            <button key={item.section_id || item.id} className="header__link" onClick={() => scrollTo(item.section_id)}>
+              <FaIcon icon={item.icon} size={14} />
               <span>{item.label}</span>
             </button>
           ))}
         </nav>
 
-        <div className="header-actions">
+        <div className="header__actions">
           {user ? (
             <>
-              <Link to="/admin" className="theme-toggle" title="管理后台">
-                <FaIcon icon="fa-solid fa-gear" />
+              <Link to="/admin" className="icon-btn" title="管理后台">
+                <FaIcon icon="fa-solid fa-gear" size={16} />
               </Link>
-              <button className="theme-toggle" onClick={handleLogout} title="注销">
-                <FaIcon icon="fa-solid fa-right-from-bracket" />
+              <button className="icon-btn" onClick={handleLogout} title="注销">
+                <FaIcon icon="fa-solid fa-right-from-bracket" size={16} />
               </button>
             </>
           ) : (
-            <Link to="/admin/login" className="theme-toggle" title="登录后台">
-              <FaIcon icon="fa-solid fa-lock" />
+            <Link to="/admin/login" className="icon-btn" title="登录后台">
+              <FaIcon icon="fa-solid fa-lock" size={16} />
             </Link>
           )}
-          <button className="theme-toggle" onClick={toggleTheme} title="切换主题">
-            <FaIcon icon={theme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun'} />
+          <button className="icon-btn" onClick={toggleTheme} title="切换主题">
+            {theme === 'light' ? <IconMoon size={16} /> : <IconSun size={16} />}
           </button>
-          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="菜单">
-            <span /><span /><span />
+          <button className="header__menu-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="菜单">
+            {menuOpen ? <IconClose size={20} /> : <IconMenu size={20} />}
           </button>
         </div>
       </div>
