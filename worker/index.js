@@ -119,55 +119,59 @@ async function ensureDatabase(env) {
     CREATE TABLE IF NOT EXISTS nav_items (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT DEFAULT '', icon TEXT DEFAULT '', section_id TEXT DEFAULT '', sort_order INTEGER DEFAULT 0);
   `);
 
-  // 检查 ADMIN_USER / ADMIN_PASS 环境变量
+  // 每次请求都从环境变量同步到数据库
   const adminUser = env.ADMIN_USER;
   const adminPass = env.ADMIN_PASS;
-  if (!adminUser || !adminPass) return { adminConfigured: false };
 
-  // 检查管理员是否已存在
-  const existing = await env.DB.prepare('SELECT COUNT(*) as count FROM admin_users').first();
-  if (existing.count > 0) return { adminConfigured: true };
+  if (!adminUser || !adminPass) {
+    return { adminConfigured: false };
+  }
 
-  // 需要初次初始化
-  console.log('QingHome2: 首次部署，自动初始化数据库…');
-
-  // 创建管理员
+  // 创建或更新管理员（幂等：不存在则插入，存在则更新密码）
   const hash = await hashPassword(adminPass);
-  await env.DB.prepare('INSERT INTO admin_users (username, password_hash) VALUES (?, ?)').bind(adminUser, hash).run();
-
-  // 填充种子数据
-  await env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status) VALUES (?,?,?,?,?,?,?,?)')
-    .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status).run();
-
-  for (let i = 0; i < DEFAULT_STATS.length; i++) {
-    await env.DB.prepare('INSERT INTO stats (label,value,icon,sort_order) VALUES (?,?,?,?)')
-      .bind(DEFAULT_STATS[i].label, DEFAULT_STATS[i].value, DEFAULT_STATS[i].icon, i).run();
-  }
-  for (let i = 0; i < DEFAULT_NAV.length; i++) {
-    await env.DB.prepare('INSERT INTO nav_items (label,icon,section_id,sort_order) VALUES (?,?,?,?)')
-      .bind(DEFAULT_NAV[i].label, DEFAULT_NAV[i].icon, DEFAULT_NAV[i].section_id, i).run();
-  }
-  for (let i = 0; i < DEFAULT_BLOG.length; i++) {
-    await env.DB.prepare('INSERT INTO blog_posts (title,excerpt,date,tags,url,sort_order) VALUES (?,?,?,?,?,?)')
-      .bind(DEFAULT_BLOG[i].title, DEFAULT_BLOG[i].excerpt, DEFAULT_BLOG[i].date, DEFAULT_BLOG[i].tags, DEFAULT_BLOG[i].url, i).run();
-  }
-  for (let i = 0; i < DEFAULT_PROJECTS.length; i++) {
-    const p = DEFAULT_PROJECTS[i];
-    await env.DB.prepare('INSERT INTO projects (name,description,tags,stars,language,language_color,url,icon,sort_order) VALUES (?,?,?,?,?,?,?,?,?)')
-      .bind(p.name, p.description, p.tags, p.stars, p.language, p.language_color, p.url, p.icon, i).run();
-  }
-  for (let i = 0; i < DEFAULT_RESOURCES.length; i++) {
-    const r = DEFAULT_RESOURCES[i];
-    await env.DB.prepare('INSERT INTO resources (title,description,category,icon,url,sort_order) VALUES (?,?,?,?,?,?)')
-      .bind(r.title, r.description, r.category, r.icon, r.url, i).run();
-  }
-  for (let i = 0; i < DEFAULT_SOCIALS.length; i++) {
-    const s = DEFAULT_SOCIALS[i];
-    await env.DB.prepare('INSERT INTO socials (name,handle,url,icon,color,sort_order) VALUES (?,?,?,?,?,?)')
-      .bind(s.name, s.handle, s.url, s.icon, s.color, i).run();
+  const existing = await env.DB.prepare('SELECT id FROM admin_users WHERE username = ?').bind(adminUser).first();
+  if (existing) {
+    await env.DB.prepare('UPDATE admin_users SET password_hash = ? WHERE id = ?').bind(hash, existing.id).run();
+  } else {
+    await env.DB.prepare('INSERT INTO admin_users (username, password_hash) VALUES (?, ?)').bind(adminUser, hash).run();
   }
 
-  console.log('QingHome2: 数据库初始化完成');
+  // 仅当没有种子数据时才写入默认数据
+  const profileCount = await env.DB.prepare('SELECT COUNT(*) as count FROM profile').first();
+  if (profileCount.count === 0) {
+    await env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status) VALUES (?,?,?,?,?,?,?,?)')
+      .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status).run();
+
+    for (let i = 0; i < DEFAULT_STATS.length; i++) {
+      await env.DB.prepare('INSERT INTO stats (label,value,icon,sort_order) VALUES (?,?,?,?)')
+        .bind(DEFAULT_STATS[i].label, DEFAULT_STATS[i].value, DEFAULT_STATS[i].icon, i).run();
+    }
+    for (let i = 0; i < DEFAULT_NAV.length; i++) {
+      await env.DB.prepare('INSERT INTO nav_items (label,icon,section_id,sort_order) VALUES (?,?,?,?)')
+        .bind(DEFAULT_NAV[i].label, DEFAULT_NAV[i].icon, DEFAULT_NAV[i].section_id, i).run();
+    }
+    for (let i = 0; i < DEFAULT_BLOG.length; i++) {
+      await env.DB.prepare('INSERT INTO blog_posts (title,excerpt,date,tags,url,sort_order) VALUES (?,?,?,?,?,?)')
+        .bind(DEFAULT_BLOG[i].title, DEFAULT_BLOG[i].excerpt, DEFAULT_BLOG[i].date, DEFAULT_BLOG[i].tags, DEFAULT_BLOG[i].url, i).run();
+    }
+    for (let i = 0; i < DEFAULT_PROJECTS.length; i++) {
+      const p = DEFAULT_PROJECTS[i];
+      await env.DB.prepare('INSERT INTO projects (name,description,tags,stars,language,language_color,url,icon,sort_order) VALUES (?,?,?,?,?,?,?,?,?)')
+        .bind(p.name, p.description, p.tags, p.stars, p.language, p.language_color, p.url, p.icon, i).run();
+    }
+    for (let i = 0; i < DEFAULT_RESOURCES.length; i++) {
+      const r = DEFAULT_RESOURCES[i];
+      await env.DB.prepare('INSERT INTO resources (title,description,category,icon,url,sort_order) VALUES (?,?,?,?,?,?)')
+        .bind(r.title, r.description, r.category, r.icon, r.url, i).run();
+    }
+    for (let i = 0; i < DEFAULT_SOCIALS.length; i++) {
+      const s = DEFAULT_SOCIALS[i];
+      await env.DB.prepare('INSERT INTO socials (name,handle,url,icon,color,sort_order) VALUES (?,?,?,?,?,?)')
+        .bind(s.name, s.handle, s.url, s.icon, s.color, i).run();
+    }
+  }
+
+  console.log('QingHome2: 数据库就绪');
   return { adminConfigured: true };
 }
 
