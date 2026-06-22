@@ -256,7 +256,9 @@ async function handleRequest(request, env) {
       }
       // 缓存过期或不存在，请求 GitHub
       try {
-        const res = await fetch(`https://api.github.com/repos/${repo}`);
+        const res = await fetch(`https://api.github.com/repos/${repo}`, {
+          headers: { 'User-Agent': 'qinghome2/1.0', 'Accept': 'application/vnd.github.v3+json' },
+        });
         if (res.ok) {
           const data = await res.json();
           const stars = data.stargazers_count;
