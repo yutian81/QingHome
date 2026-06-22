@@ -177,8 +177,9 @@ async function handleRequest(request, env) {
     });
   }
 
-  // 确保表已创建
+  // 确保表已创建，并尝试写入默认数据（数据为空时自动填充）
   await ensureTables(env);
+  await seedIfEmpty(env);
 
   // ── 公开配置 ──
   if (pathname === '/api/public/config' && request.method === 'GET') {
