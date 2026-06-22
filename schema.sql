@@ -1,5 +1,5 @@
 -- QingHome2 D1 Database Schema
--- 无需手动执行，Worker 在首次部署时会自动建表并初始化
+-- 与 worker/index.js ensureTables() 保持一致
 
 CREATE TABLE IF NOT EXISTS admin_users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,8 +13,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   token TEXT NOT NULL UNIQUE,
   user_id INTEGER NOT NULL,
   expires_at TEXT NOT NULL,
-  created_at TEXT DEFAULT (datetime('now')),
-  FOREIGN KEY (user_id) REFERENCES admin_users(id)
+  created_at TEXT DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS profile (
@@ -86,3 +85,7 @@ CREATE TABLE IF NOT EXISTS nav_items (
   section_id TEXT DEFAULT '',
   sort_order INTEGER DEFAULT 0
 );
+
+-- 索引
+CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
+CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);

@@ -8,16 +8,12 @@ export default function F({ label, value, onChange, type = 'text', placeholder, 
       {rows ? (
         <textarea id={id} value={value} onChange={e => onChange(e.target.value)} rows={rows} placeholder={placeholder || ''} />
       ) : type === 'color' ? (
-        <input id={id} type="color" value={value || '#000000'} onChange={e => onChange(e.target.value)} style={{ width: 40, height: 36, padding: 2, cursor: 'pointer' }} />
+        <input id={id} type="color" value={value || '#000000'} onChange={e => onChange(e.target.value)} className="admin-color-input" />
       ) : type === 'color-text' ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <input type="color" value={value || '#000000'} onChange={e => onChange(e.target.value)} style={{ width: 40, height: 36, padding: 2, cursor: 'pointer', flexShrink: 0 }} />
-          <input type="text" value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder || ''} style={{ flex: 1 }} />
+        <div className="admin-color-ct">
+          <input type="color" value={value || '#000000'} onChange={e => onChange(e.target.value)} className="admin-color-input" />
+          <input type="text" value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder || ''} />
         </div>
-      ) : type === 'select' ? (
-        <select id={id} value={value || ''} onChange={e => onChange(e.target.value)}>
-          {placeholder}
-        </select>
       ) : (
         <input id={id} type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder || ''} />
       )}

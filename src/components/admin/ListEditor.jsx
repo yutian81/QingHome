@@ -42,7 +42,7 @@ export default function ListEditor({ items, columns, title, icon, onAdd, onUpdat
           <div className="admin-form-grid">
             {displayCols.map(c => (
               <F key={c.key} label={c.label} value={form[c.key] || ''} onChange={v => setForm(f => ({ ...f, [c.key]: v }))}
-                rows={c.rows} type={c.type} placeholder={c.type === 'select' ? renderOptions(c.options) : c.placeholder} fullWidth={c.fullWidth} />
+                rows={c.rows} type={c.type} placeholder={c.placeholder} fullWidth={c.fullWidth} />
             ))}
           </div>
           <div className="admin-edit-actions">
@@ -73,10 +73,6 @@ export default function ListEditor({ items, columns, title, icon, onAdd, onUpdat
       </table>
     </div>
   );
-}
-
-function renderOptions(opts) {
-  return opts?.map(o => <option key={o.value} value={o.value}>{o.label}</option>);
 }
 
 function truncate(s, n) {

@@ -24,14 +24,18 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(async () => {
-    try { await api.logout(); } catch {}
+    try { await api.logout(); } catch (e) { console.error('logout error:', e); }
     localStorage.removeItem('qinghome2_token');
     localStorage.removeItem('qinghome2_username');
     setUser(null);
   }, []);
 
+  const updateUser = useCallback((token, username) => {
+    setUser({ token, username });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -20,7 +20,7 @@ export default function Footer() {
 
         <p className="footer__text">
           © {year} {brand}. Built with React + Vite, deployed on Cloudflare Workers.
-          {user && <span style={{ marginLeft: 8 }}>· <Link to="/admin" style={{ color: 'var(--brand)' }}>管理</Link></span>}
+          {user && <> <Link to="/admin" className="admin-footer-link">管理</Link></>}
         </p>
 
         <div className="footer__socials">

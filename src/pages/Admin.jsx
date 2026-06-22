@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useSite } from '../context/SiteContext.jsx';
 import * as api from '../api.js';
@@ -156,12 +156,13 @@ function AdminDashboard() {
 
 export default function Admin() {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && !user) {
-      window.location.href = '/admin/login';
+      navigate('/admin/login', { replace: true });
     }
-  }, [user, loading]);
+  }, [user, loading, navigate]);
 
   if (loading) return <div className="admin-loading"><span className="admin-icon-gap"><FaIcon icon="fa-solid fa-spinner fa-spin" size={15} />加载中…</span></div>;
   if (!user) return null;

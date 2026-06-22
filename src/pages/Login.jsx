@@ -5,7 +5,7 @@ import * as api from '../api.js';
 import { FaIcon } from '../components/Icons.jsx';
 
 export default function Login() {
-  const { user, login } = useAuth();
+  const { user, login, updateUser } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState('login');
   const [checking, setChecking] = useState(true);
@@ -51,6 +51,7 @@ export default function Login() {
       const result = await api.setup(regUser, regPass);
       localStorage.setItem('qinghome2_token', result.token);
       localStorage.setItem('qinghome2_username', result.username);
+      updateUser(result.token, result.username);
       navigate('/admin', { replace: true });
     } catch (err) {
       setError(err.message);

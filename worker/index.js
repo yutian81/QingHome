@@ -152,31 +152,18 @@ async function seedIfEmpty(env) {
   const { count } = await env.DB.prepare('SELECT COUNT(*) as count FROM profile').first();
   if (count > 0) return;
 
-  await env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status) VALUES (?,?,?,?,?,?,?,?)')
-    .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status).run();
+  const stmts = [
+    env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status) VALUES (?,?,?,?,?,?,?,?)')
+      .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status),
+  ];
+  DEFAULT_STATS.forEach((s, i) => stmts.push(env.DB.prepare('INSERT INTO stats (label,value,icon,sort_order) VALUES (?,?,?,?)').bind(s.label, s.value, s.icon, i)));
+  DEFAULT_NAV.forEach((n, i) => stmts.push(env.DB.prepare('INSERT INTO nav_items (label,icon,section_id,sort_order) VALUES (?,?,?,?)').bind(n.label, n.icon, n.section_id, i)));
+  DEFAULT_BLOG.forEach((b, i) => stmts.push(env.DB.prepare('INSERT INTO blog_posts (title,excerpt,date,tags,url,sort_order) VALUES (?,?,?,?,?,?)').bind(b.title, b.excerpt, b.date, b.tags, b.url, i)));
+  DEFAULT_PROJECTS.forEach((p, i) => stmts.push(env.DB.prepare('INSERT INTO projects (name,description,tags,stars,language,language_color,url,icon,sort_order) VALUES (?,?,?,?,?,?,?,?,?)').bind(p.name, p.description, p.tags, p.stars, p.language, p.language_color, p.url, p.icon, i)));
+  DEFAULT_RESOURCES.forEach((r, i) => stmts.push(env.DB.prepare('INSERT INTO resources (title,description,category,icon,url,sort_order) VALUES (?,?,?,?,?,?)').bind(r.title, r.description, r.category, r.icon, r.url, i)));
+  DEFAULT_SOCIALS.forEach((s, i) => stmts.push(env.DB.prepare('INSERT INTO socials (name,handle,url,icon,sort_order) VALUES (?,?,?,?,?)').bind(s.name, s.handle, s.url, s.icon, i)));
 
-  for (let i = 0; i < DEFAULT_STATS.length; i++) {
-    await env.DB.prepare('INSERT INTO stats (label,value,icon,sort_order) VALUES (?,?,?,?)').bind(DEFAULT_STATS[i].label, DEFAULT_STATS[i].value, DEFAULT_STATS[i].icon, i).run();
-  }
-  for (let i = 0; i < DEFAULT_NAV.length; i++) {
-    await env.DB.prepare('INSERT INTO nav_items (label,icon,section_id,sort_order) VALUES (?,?,?,?)').bind(DEFAULT_NAV[i].label, DEFAULT_NAV[i].icon, DEFAULT_NAV[i].section_id, i).run();
-  }
-  for (let i = 0; i < DEFAULT_BLOG.length; i++) {
-    await env.DB.prepare('INSERT INTO blog_posts (title,excerpt,date,tags,url,sort_order) VALUES (?,?,?,?,?,?)').bind(DEFAULT_BLOG[i].title, DEFAULT_BLOG[i].excerpt, DEFAULT_BLOG[i].date, DEFAULT_BLOG[i].tags, DEFAULT_BLOG[i].url, i).run();
-  }
-  for (let i = 0; i < DEFAULT_PROJECTS.length; i++) {
-    const p = DEFAULT_PROJECTS[i];
-    await env.DB.prepare('INSERT INTO projects (name,description,tags,stars,language,language_color,url,icon,sort_order) VALUES (?,?,?,?,?,?,?,?,?)')
-      .bind(p.name, p.description, p.tags, p.stars, p.language, p.language_color, p.url, p.icon, i).run();
-  }
-  for (let i = 0; i < DEFAULT_RESOURCES.length; i++) {
-    const r = DEFAULT_RESOURCES[i];
-    await env.DB.prepare('INSERT INTO resources (title,description,category,icon,url,sort_order) VALUES (?,?,?,?,?,?)').bind(r.title, r.description, r.category, r.icon, r.url, i).run();
-  }
-  for (let i = 0; i < DEFAULT_SOCIALS.length; i++) {
-    const s = DEFAULT_SOCIALS[i];
-    await env.DB.prepare('INSERT INTO socials (name,handle,url,icon,sort_order) VALUES (?,?,?,?,?)').bind(s.name, s.handle, s.url, s.icon, i).run();
-  }
+  await env.DB.batch(stmts);
 }
 
 async function hasAdmin(env) {
@@ -310,7 +297,7 @@ async function handleRequest(request, env) {
 }
 
 async function parseJSON(request) {
-  try { return await request.json(); } catch { return {}; }
+  try { return await request.json(); } catch { return null; }
 }
 
 function generateToken() {
@@ -345,20 +332,26 @@ async function login(request, env) {
 async function logout(request, env) {
   const auth = request.headers.get('Authorization');
   if (auth?.startsWith('Bearer ')) {
-    await env.DB.prepare('DELETE FROM sessions WHERE token = ?').bind(auth.slice(7)).run();
+    const token = auth.slice(7);
+    const row = await env.DB.prepare('SELECT id FROM sessions WHERE token = ?').bind(token).first();
+    if (row) {
+      await env.DB.prepare('DELETE FROM sessions WHERE token = ?').bind(token).run();
+    }
   }
   return json({ ok: true });
 }
 
 async function getPublicConfig(env) {
   const db = env.DB;
-  const profile = await db.prepare('SELECT * FROM profile LIMIT 1').first();
-  const stats = (await db.prepare('SELECT * FROM stats ORDER BY sort_order ASC, id ASC').all()).results;
-  const navItems = (await db.prepare('SELECT * FROM nav_items ORDER BY sort_order ASC, id ASC').all()).results;
-  const blogPosts = (await db.prepare('SELECT * FROM blog_posts ORDER BY sort_order ASC, id ASC').all()).results;
-  const projects = (await db.prepare('SELECT * FROM projects ORDER BY sort_order ASC, id ASC').all()).results;
-  const resources = (await db.prepare('SELECT * FROM resources ORDER BY sort_order ASC, id ASC').all()).results;
-  const socials = (await db.prepare('SELECT * FROM socials ORDER BY sort_order ASC, id ASC').all()).results;
+  const [profile, stats, navItems, blogPosts, projects, resources, socials] = await Promise.all([
+    db.prepare('SELECT * FROM profile LIMIT 1').first(),
+    db.prepare('SELECT * FROM stats ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+    db.prepare('SELECT * FROM nav_items ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+    db.prepare('SELECT * FROM blog_posts ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+    db.prepare('SELECT * FROM projects ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+    db.prepare('SELECT * FROM resources ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+    db.prepare('SELECT * FROM socials ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+  ]);
   return json({
     profile: profile || DEFAULT_PROFILE,
     stats: stats.length ? stats : DEFAULT_STATS,
