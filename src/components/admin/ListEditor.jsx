@@ -9,7 +9,10 @@ export default function ListEditor({ items, columns, title, icon, onAdd, onUpdat
 
   const reset = () => { setEditing(null); setForm({}); };
   const showError = (msg) => { setError(msg); setTimeout(() => setError(''), 3000); };
-  const startEdit = (item) => { setEditing(item.id); setForm({ ...item }); };
+  const startEdit = (item) => {
+    setEditing(Number(item.id));
+    setForm(JSON.parse(JSON.stringify(item)));
+  };
   const startAdd = () => {
     const o = {};
     columns.forEach(c => { if (!['id', 'sort_order'].includes(c.key)) o[c.key] = ''; });
