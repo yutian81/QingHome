@@ -135,6 +135,7 @@ const TABLES_SQL = [
   `CREATE TABLE IF NOT EXISTS nav_items (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT DEFAULT '', icon TEXT DEFAULT '', section_id TEXT DEFAULT '', sort_order INTEGER DEFAULT 0)`,
   `CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token)`,
   `CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at)`,
+  `CREATE TABLE IF NOT EXISTS gh_stars_cache (repo TEXT PRIMARY KEY, stars INTEGER NOT NULL, updated_at TEXT NOT NULL)`,
 ];
 
 async function ensureTables(env) {
@@ -243,12 +244,24 @@ async function handleRequest(request, env) {
     const repos = url.searchParams.get('repos') || '';
     const list = repos.split(',').filter(Boolean);
     const results = {};
+    const now = Date.now();
+    const ttl = 60 * 60 * 1000; // 1 小时缓存
+
     for (const repo of list.slice(0, 20)) {
+      // 先从 D1 读缓存
+      const cached = await env.DB.prepare('SELECT stars, updated_at FROM gh_stars_cache WHERE repo = ?').bind(repo).first();
+      if (cached && (now - new Date(cached.updated_at).getTime()) < ttl) {
+        results[repo] = cached.stars;
+        continue;
+      }
+      // 缓存过期或不存在，请求 GitHub
       try {
         const res = await fetch(`https://api.github.com/repos/${repo}`);
         if (res.ok) {
           const data = await res.json();
-          results[repo] = data.stargazers_count;
+          const stars = data.stargazers_count;
+          results[repo] = stars;
+          await env.DB.prepare('INSERT OR REPLACE INTO gh_stars_cache (repo, stars, updated_at) VALUES (?, ?, datetime(\'now\'))').bind(repo, stars).run();
         }
       } catch {}
     }

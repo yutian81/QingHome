@@ -89,3 +89,10 @@ CREATE TABLE IF NOT EXISTS nav_items (
 -- 索引
 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
+
+-- GitHub Stars 缓存
+CREATE TABLE IF NOT EXISTS gh_stars_cache (
+  repo TEXT PRIMARY KEY,
+  stars INTEGER NOT NULL,
+  updated_at TEXT NOT NULL
+);
