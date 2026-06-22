@@ -12,6 +12,7 @@ export default function Blog() {
       eyebrow="Blog"
       title="博客文章"
       subtitle="把踩过的坑、想清楚的道理写下来"
+      icon="fa-solid fa-feather"
       action={
         <a className="section__link" href="https://blog.notett.com" target="_blank" rel="noreferrer">
           访问我的博客 <IconExternal size={14} />

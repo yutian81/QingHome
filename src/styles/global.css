@@ -95,7 +95,7 @@ img { max-width: 100%; display: block; }
 .section__inner { max-width: 1120px; margin: 0 auto; }
 .section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 48px; }
 .section__eyebrow { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
-.section__title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+.section__title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
 .section__subtitle { color: var(--text-soft); margin-top: 8px; font-size: 15px; }
 .section__link { display: inline-flex; align-items: center; gap: 6px; color: var(--brand); font-size: 14px; font-weight: 500; padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; transition: all 0.2s ease; white-space: nowrap; }
 .section__link:hover { background: var(--brand-soft); border-color: var(--brand); }

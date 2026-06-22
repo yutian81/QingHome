@@ -12,6 +12,7 @@ export default function Resources() {
       eyebrow="Resources"
       title="公益站点"
       subtitle="自建及精选公益站点，持续更新"
+      icon="fa-solid fa-compass"
     >
       <div className="cards cards--resources">
         {resourcesList.map((r, i) => (

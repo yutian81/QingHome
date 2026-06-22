@@ -13,6 +13,12 @@ function F({ label, value, onChange, type = 'text', placeholder, rows }) {
       <label htmlFor={id}>{label}</label>
       {rows ? (
         <textarea id={id} value={value} onChange={e => onChange(e.target.value)} rows={rows} placeholder={placeholder || ''} />
+      ) : type === 'color' ? (
+        <div className="admin-color-wrap">
+          <span className="admin-color-swatch" style={{ background: value || '#000000' }} />
+          <input id={id} type="color" value={value || '#000000'} onChange={e => onChange(e.target.value)} />
+          <input type="text" value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder || ''} className="admin-color-text" />
+        </div>
       ) : (
         <input id={id} type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder || ''} />
       )}
@@ -58,9 +64,11 @@ function ListEditor({ items, columns, title, onAdd, onUpdate, onDelete }) {
       {editing && (
         <div className="admin-edit-panel">
           <h4>{editing === 'new' ? '新增' : '编辑'}</h4>
+          <div className="admin-form-grid">
           {displayCols.map(c => (
             <F key={c.key} label={c.label} value={form[c.key] || ''} onChange={v => setForm(f => ({ ...f, [c.key]: v }))} rows={c.rows} type={c.type} placeholder={c.placeholder || ''} />
           ))}
+          </div>
           <div className="admin-edit-actions">
             <button className="admin-btn primary" onClick={save}>保存</button>
             <button className="admin-btn" onClick={reset}>取消</button>
@@ -207,8 +215,8 @@ function AdminDashboard() {
           ))}
         </nav>
         <div className="admin-sidebar-bottom">
-          <Link to="/" className="admin-nav-btn">🏠 查看首页</Link>
-          <button className="admin-nav-btn" onClick={logout}>🚪 退出登录</button>
+          <Link to="/" className="admin-nav-btn"><i className="fa-solid fa-house" style={{width:18,textAlign:'center',marginRight:6}} /> 查看首页</Link>
+          <button className="admin-nav-btn" onClick={logout}><i className="fa-solid fa-right-from-bracket" style={{width:18,textAlign:'center',marginRight:6}} /> 退出登录</button>
         </div>
       </aside>
 

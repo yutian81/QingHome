@@ -12,6 +12,7 @@ export default function Social() {
       eyebrow="Connect"
       title="保持联系"
       subtitle="可以通过邮箱或者社交媒体找到我"
+      icon="fa-solid fa-envelope"
     >
       <div className="cta-box">
         <div>
