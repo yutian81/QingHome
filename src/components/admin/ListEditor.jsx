@@ -5,8 +5,10 @@ import F from './FormField.jsx';
 export default function ListEditor({ items, columns, title, icon, onAdd, onUpdate, onDelete }) {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
+  const [error, setError] = useState('');
 
   const reset = () => { setEditing(null); setForm({}); };
+  const showError = (msg) => { setError(msg); setTimeout(() => setError(''), 3000); };
   const startEdit = (item) => { setEditing(item.id); setForm({ ...item }); };
   const startAdd = () => {
     const o = {};
@@ -16,15 +18,23 @@ export default function ListEditor({ items, columns, title, icon, onAdd, onUpdat
   };
 
   const save = async () => {
-    if (editing === 'new') { await onAdd(form); }
-    else { await onUpdate(editing, form); }
-    reset();
+    try {
+      if (editing === 'new') { await onAdd(form); }
+      else { await onUpdate(editing, form); }
+      reset();
+    } catch (err) {
+      showError(err.message);
+    }
   };
 
   const remove = async (id) => {
     if (!confirm('确定删除？')) return;
-    await onDelete(id);
-    if (editing === id) reset();
+    try {
+      await onDelete(id);
+      if (editing === id) reset();
+    } catch (err) {
+      showError(err.message);
+    }
   };
 
   const displayCols = columns.filter(c => !['id', 'sort_order'].includes(c.key));
@@ -35,6 +45,8 @@ export default function ListEditor({ items, columns, title, icon, onAdd, onUpdat
         <h3>{icon && <span className="admin-hicon-gap"><FaIcon icon={icon} size={15} /> {title}</span>}</h3>
         <button className="admin-btn small" onClick={startAdd}><span className="admin-icon-gap"><FaIcon icon="fa-solid fa-plus" size={12} /> 新增</span></button>
       </div>
+
+      {error && <div className="admin-msg error"><span className="admin-icon-gap"><FaIcon icon="fa-solid fa-circle-exclamation" size={14} />{error}</span></div>}
 
       {editing && (
         <div className="admin-edit-panel">
