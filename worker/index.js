@@ -258,20 +258,31 @@ async function handleRequest(request, env) {
 async function getPublicConfig(env) {
   const db = env.DB;
 
-  const getSection = async (table, single = false) => {
+  const getSingle = async (table) => {
+    const rows = await db.prepare(`SELECT * FROM ${table} LIMIT 1`).all();
+    return rows.results?.[0] || null;
+  };
+  const getList = async (table) => {
     const rows = await db.prepare(`SELECT * FROM ${table} ORDER BY sort_order ASC, id ASC`).all();
-    if (single) return rows.results?.[0] || null;
     return rows.results || [];
   };
 
+  const profile = await getSingle('profile');
+  const stats = await getList('stats');
+  const navItems = await getList('nav_items');
+  const blogPosts = await getList('blog_posts');
+  const projects = await getList('projects');
+  const resources = await getList('resources');
+  const socials = await getList('socials');
+
   return json({
-    profile: await getSection('profile', true) || DEFAULT_PROFILE,
-    stats: (await getSection('stats')) || DEFAULT_STATS,
-    navItems: (await getSection('nav_items')) || DEFAULT_NAV,
-    blogPosts: (await getSection('blog_posts')) || DEFAULT_BLOG,
-    projects: (await getSection('projects')) || DEFAULT_PROJECTS,
-    resources: (await getSection('resources')) || DEFAULT_RESOURCES,
-    socials: (await getSection('socials')) || DEFAULT_SOCIALS,
+    profile: profile || DEFAULT_PROFILE,
+    stats: stats.length ? stats : DEFAULT_STATS,
+    navItems: navItems.length ? navItems : DEFAULT_NAV,
+    blogPosts: blogPosts.length ? blogPosts : DEFAULT_BLOG,
+    projects: projects.length ? projects : DEFAULT_PROJECTS,
+    resources: resources.length ? resources : DEFAULT_RESOURCES,
+    socials: socials.length ? socials : DEFAULT_SOCIALS,
   });
 }
 
