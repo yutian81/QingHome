@@ -9,5 +9,6 @@ database_name = "qinghome2"
 
 # 静态资源托管（Vite 构建产物）
 [assets]
+binding = "ASSETS"
 directory = "./dist"
 not_found_handling = "single-page-application"

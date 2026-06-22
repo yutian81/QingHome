@@ -180,14 +180,14 @@ function AdminDashboard() {
   };
 
   const TABS = [
-    { id: 'profile', label: '个人资料' },
-    { id: 'stats', label: '统计' },
-    { id: 'nav', label: '导航' },
-    { id: 'blog', label: '博客' },
-    { id: 'projects', label: '项目' },
-    { id: 'resources', label: '资源' },
-    { id: 'socials', label: '社交' },
-    { id: 'password', label: '密码' },
+    { id: 'profile', label: '📋 个人资料' },
+    { id: 'stats', label: '📊 统计' },
+    { id: 'nav', label: '🧭 导航' },
+    { id: 'blog', label: '📝 博客' },
+    { id: 'projects', label: '💻 项目' },
+    { id: 'resources', label: '🔗 资源' },
+    { id: 'socials', label: '🌐 社交' },
+    { id: 'password', label: '🔑 密码' },
   ];
 
   const refreshSection = async () => { await loadAll(); refresh(); };
@@ -216,18 +216,19 @@ function AdminDashboard() {
         {msg && <div className={`admin-msg ${msg.type}`}>{msg.text}</div>}
 
         {/* 个人资料 */}
-        {tab === 'profile' && profile && (
+        {tab === 'profile' && (
           <div className="admin-section">
             <div className="admin-section-header"><h3>📋 个人资料</h3></div>
-            <F label="名称" value={profile.name} onChange={v => setProfile(p => ({ ...p, name: v }))} />
-            <F label="品牌" value={profile.brand} onChange={v => setProfile(p => ({ ...p, brand: v }))} />
-            <F label="头像 URL" value={profile.avatar} onChange={v => setProfile(p => ({ ...p, avatar: v }))} />
-            <F label="标题" value={profile.title} onChange={v => setProfile(p => ({ ...p, title: v }))} />
-            <F label="副标题" value={profile.tagline} onChange={v => setProfile(p => ({ ...p, tagline: v }))} />
-            <F label="简介" value={profile.bio} onChange={v => setProfile(p => ({ ...p, bio: v }))} rows={3} />
-            <F label="邮箱" value={profile.email} onChange={v => setProfile(p => ({ ...p, email: v }))} type="email" />
-            <F label="状态" value={profile.status} onChange={v => setProfile(p => ({ ...p, status: v }))} placeholder="available / busy / offline" />
-            <button className="admin-btn primary" onClick={saveProfile}>保存</button>
+            {!profile && <p style={{color:'var(--text-dim)',marginBottom:16}}>暂无数据，请先填写保存</p>}
+            <F label="名称" value={profile?.name || ''} onChange={v => setProfile(p => ({ ...p || {}, name: v }))} />
+            <F label="品牌" value={profile?.brand || ''} onChange={v => setProfile(p => ({ ...p || {}, brand: v }))} />
+            <F label="头像 URL" value={profile?.avatar || ''} onChange={v => setProfile(p => ({ ...p || {}, avatar: v }))} />
+            <F label="标题" value={profile?.title || ''} onChange={v => setProfile(p => ({ ...p || {}, title: v }))} />
+            <F label="副标题" value={profile?.tagline || ''} onChange={v => setProfile(p => ({ ...p || {}, tagline: v }))} />
+            <F label="简介" value={profile?.bio || ''} onChange={v => setProfile(p => ({ ...p || {}, bio: v }))} rows={3} />
+            <F label="邮箱" value={profile?.email || ''} onChange={v => setProfile(p => ({ ...p || {}, email: v }))} type="email" />
+            <F label="状态" value={profile?.status || 'available'} onChange={v => setProfile(p => ({ ...p || {}, status: v }))} placeholder="available / busy / offline" />
+            <button className="admin-btn primary" onClick={saveProfile} disabled={!profile}>保存</button>
           </div>
         )}
 
