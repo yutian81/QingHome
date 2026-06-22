@@ -30,7 +30,11 @@ export default function Projects() {
     const cacheKey = 'qinghome2_gh_stars';
     try {
       const cached = sessionStorage.getItem(cacheKey);
-      if (cached) { setStarsMap(JSON.parse(cached)); return; }
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        // 忽略空缓存（之前无 UA 时的 {} 残留）
+        if (Object.keys(parsed).length > 0) { setStarsMap(parsed); return; }
+      }
     } catch {}
 
     fetchGitHubStars(repos).then(data => {
