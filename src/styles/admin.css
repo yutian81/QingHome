@@ -349,20 +349,23 @@
 }
 .admin-color-input {
   width: 40px;
+  min-width: 40px;
   height: 36px;
   padding: 2px;
   border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
-  flex-shrink: 0;
+  box-sizing: border-box;
 }
 .admin-color-ct {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  min-width: 0;
 }
 .admin-color-ct input[type="text"] {
   flex: 1;
+  min-width: 0;
 }
 .admin-footer-link {
   color: var(--brand);
