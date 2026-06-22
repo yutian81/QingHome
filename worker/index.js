@@ -207,6 +207,18 @@ async function handleRequest(request, env) {
   if (pathname === '/api/auth/login' && request.method === 'POST') return login(request, env);
   if (pathname === '/api/auth/logout' && request.method === 'POST') return logout(request, env);
 
+  // ── 调试接口：查看环境变量是否正常读取 ──
+  if (pathname === '/api/admin/debug' && request.method === 'GET') {
+    return json({
+      hasAdminUser: !!env.ADMIN_USER,
+      hasAdminPass: !!env.ADMIN_PASS,
+      adminUserValue: env.ADMIN_USER ? env.ADMIN_USER.substring(0, 3) + '***' : null,
+      adminPassValue: env.ADMIN_PASS ? '***' : null,
+      allKeys: Object.keys(env).filter(k => !['DB', 'ASSETS'].includes(k)),
+      dbState,
+    });
+  }
+
   // ── 管理后台状态 ──
   if (pathname === '/api/admin/status' && request.method === 'GET') {
     return json({ setupNeeded: !dbState.adminConfigured });
