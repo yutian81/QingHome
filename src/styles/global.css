@@ -91,7 +91,7 @@ img { max-width: 100%; display: block; }
 /* ============================================================
    SECTION（通用区块）
    ============================================================ */
-.section { padding: 72px 24px; position: relative; }
+.section { padding: 48px 24px; position: relative; }
 .section__inner { max-width: 1120px; margin: 0 auto; }
 .section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 48px; }
 .section__eyebrow { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
