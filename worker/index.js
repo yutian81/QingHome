@@ -16,54 +16,54 @@ const DEFAULT_PROFILE = {
 };
 
 const DEFAULT_STATS = [
-  { id: 0, label: '开源贡献', value: '1.5k+', icon: 'fa-solid fa-atom' },
-  { id: 1, label: '技术文章', value: '96', icon: 'fa-solid fa-file-lines' },
-  { id: 2, label: 'GitHub Stars', value: '839', icon: 'fa-solid fa-star' },
+  { id: 1, label: '开源贡献', value: '1.5k+', icon: 'fa-solid fa-atom' },
+  { id: 2, label: '技术文章', value: '96', icon: 'fa-solid fa-file-lines' },
+  { id: 3, label: 'GitHub Stars', value: '839', icon: 'fa-solid fa-star' },
 ];
 
 const DEFAULT_NAV = [
-  { id: 0, label: '首页', icon: 'fa-solid fa-house', section_id: 'home' },
-  { id: 1, label: '博客', icon: 'fa-solid fa-feather', section_id: 'blog' },
-  { id: 2, label: '项目', icon: 'fa-solid fa-code', section_id: 'projects' },
-  { id: 3, label: '站点', icon: 'fa-solid fa-compass', section_id: 'resources' },
-  { id: 4, label: '联系', icon: 'fa-solid fa-envelope', section_id: 'connect' },
+  { id: 1, label: '首页', icon: 'fa-solid fa-house', section_id: 'home' },
+  { id: 2, label: '博客', icon: 'fa-solid fa-feather', section_id: 'blog' },
+  { id: 3, label: '项目', icon: 'fa-solid fa-code', section_id: 'projects' },
+  { id: 4, label: '站点', icon: 'fa-solid fa-compass', section_id: 'resources' },
+  { id: 5, label: '联系', icon: 'fa-solid fa-envelope', section_id: 'connect' },
 ];
 
 const DEFAULT_BLOG = [
-  { id: 0, title: '现代化域名管理工具', excerpt: '基于 Cloudflare Worker 和 KV 构建的域名监控面板。', date: '2025-11-18', tags: 'Cloudflare,Domain', url: 'https://blog.notett.com/post/2025/11/251118-domain-check/' },
-  { id: 1, title: 'Hexo 博客文章加密局部指定内容', excerpt: '加密插件 hexo-blog-encrypt 可以加密单篇文章，但不能实现局部内容加密。', date: '2025-12-24', tags: 'Hexo,Encrypt', url: 'https://blog.notett.com/post/2025/08/250809-hexo-jiami/' },
-  { id: 2, title: '在 Obsidian 中使用兰空图床 API 自动传图', excerpt: 'pnpm workspace + Turborepo + Changesets 的实战落地。', date: '2025-02-18', tags: 'Obsidian,LskyPro', url: 'https://blog.notett.com/post/2024/10/lskypro-nf/' },
-  { id: 3, title: '白嫖 B2 10G 对象存储并挂载到 alist', excerpt: '让 B2 的私有桶通过 CF Worker 反代实现公开访问。', date: '2025-05-03', tags: 'backblaze,Cloudflare', url: 'https://blog.notett.com/post/2025/05/b2-bucket-mount/' },
-  { id: 4, title: '免费域名资源收集', excerpt: '收集一些免费的域名资源供大家选择使用。', date: '2025-05-30', tags: 'Domain,Free', url: 'https://blog.notett.com/post/2025/05/250530-free-domain/' },
-  { id: 5, title: '用 Serv00 设置域名邮箱', excerpt: 'Serv00 自带的邮箱功能能够实现收发件，同时支持 IMAP/POP/SMTP 功能。', date: '2025-06-29', tags: 'Serv00,Mail', url: 'https://blog.notett.com/post/2025/06/202506-s00-email/' },
+  { id: 1, title: '现代化域名管理工具', excerpt: '基于 Cloudflare Worker 和 KV 构建的域名监控面板。', date: '2025-11-18', tags: 'Cloudflare,Domain', url: 'https://blog.notett.com/post/2025/11/251118-domain-check/' },
+  { id: 2, title: 'Hexo 博客文章加密局部指定内容', excerpt: '加密插件 hexo-blog-encrypt 可以加密单篇文章，但不能实现局部内容加密。', date: '2025-12-24', tags: 'Hexo,Encrypt', url: 'https://blog.notett.com/post/2025/08/250809-hexo-jiami/' },
+  { id: 3, title: '在 Obsidian 中使用兰空图床 API 自动传图', excerpt: 'pnpm workspace + Turborepo + Changesets 的实战落地。', date: '2025-02-18', tags: 'Obsidian,LskyPro', url: 'https://blog.notett.com/post/2024/10/lskypro-nf/' },
+  { id: 4, title: '白嫖 B2 10G 对象存储并挂载到 alist', excerpt: '让 B2 的私有桶通过 CF Worker 反代实现公开访问。', date: '2025-05-03', tags: 'backblaze,Cloudflare', url: 'https://blog.notett.com/post/2025/05/b2-bucket-mount/' },
+  { id: 5, title: '免费域名资源收集', excerpt: '收集一些免费的域名资源供大家选择使用。', date: '2025-05-30', tags: 'Domain,Free', url: 'https://blog.notett.com/post/2025/05/250530-free-domain/' },
+  { id: 6, title: '用 Serv00 设置域名邮箱', excerpt: 'Serv00 自带的邮箱功能能够实现收发件，同时支持 IMAP/POP/SMTP 功能。', date: '2025-06-29', tags: 'Serv00,Mail', url: 'https://blog.notett.com/post/2025/06/202506-s00-email/' },
 ];
 
 const DEFAULT_PROJECTS = [
-  { id: 0, name: 'domain-check', description: '基于 Cloudflare Worker 和 KV 构建的域名到期监控仪表盘，支持到期提醒。', tags: 'Cloudflare,Domain', stars: 245, language: 'JavaScript', language_color: '#083fa1', url: 'https://github.com/yutian81/domain-check', icon: 'fa-brands fa-github' },
-  { id: 1, name: 'IP-SpeedTest', description: '测试 Cloudflare IP 地址的位置信息、延迟和下载速度。', tags: 'SpeedTest,Cloudflare', stars: 30, language: 'Golang', language_color: '#3178c6', url: 'https://github.com/yutian81/IP-SpeedTest', icon: 'fa-brands fa-github' },
-  { id: 2, name: 'Keepalive', description: '各种保活项目合集。', tags: 'Keepalive,Action', stars: 167, language: 'Python', language_color: '#f1e05a', url: 'https://github.com/yutian81/Keepalive', icon: 'fa-brands fa-github' },
-  { id: 3, name: 'QingHome', description: '一个精美的现代化个人主页。', tags: 'Cloudflare,Vite,React', stars: 99, language: 'TypeScript', language_color: '#3178c6', url: 'https://github.com/yutian81/QingHome', icon: 'fa-brands fa-github' },
-  { id: 4, name: 'openclaw-hug', description: '专用于 Hugging Face 的 openclaw 部署方案。', tags: 'Hugging,AI', stars: 98, language: 'Shell', language_color: '#f1e05a', url: 'https://github.com/yutianqq/openclaw-hug', icon: 'fa-brands fa-github' },
-  { id: 5, name: 'hermes-hug', description: '专用于 Hugging Face 的 hermes 部署方案。', tags: 'Hugging,AI', stars: 97, language: 'Shell', language_color: '#563d7c', url: 'https://github.com/yutianqq/hermes-hug', icon: 'fa-brands fa-github' },
+  { id: 1, name: 'domain-check', description: '基于 Cloudflare Worker 和 KV 构建的域名到期监控仪表盘，支持到期提醒。', tags: 'Cloudflare,Domain', stars: 245, language: 'JavaScript', language_color: '#083fa1', url: 'https://github.com/yutian81/domain-check', icon: 'fa-brands fa-github' },
+  { id: 2, name: 'IP-SpeedTest', description: '测试 Cloudflare IP 地址的位置信息、延迟和下载速度。', tags: 'SpeedTest,Cloudflare', stars: 30, language: 'Golang', language_color: '#3178c6', url: 'https://github.com/yutian81/IP-SpeedTest', icon: 'fa-brands fa-github' },
+  { id: 3, name: 'Keepalive', description: '各种保活项目合集。', tags: 'Keepalive,Action', stars: 167, language: 'Python', language_color: '#f1e05a', url: 'https://github.com/yutian81/Keepalive', icon: 'fa-brands fa-github' },
+  { id: 4, name: 'QingHome', description: '一个精美的现代化个人主页。', tags: 'Cloudflare,Vite,React', stars: 99, language: 'TypeScript', language_color: '#3178c6', url: 'https://github.com/yutian81/QingHome', icon: 'fa-brands fa-github' },
+  { id: 5, name: 'openclaw-hug', description: '专用于 Hugging Face 的 openclaw 部署方案。', tags: 'Hugging,AI', stars: 98, language: 'Shell', language_color: '#f1e05a', url: 'https://github.com/yutianqq/openclaw-hug', icon: 'fa-brands fa-github' },
+  { id: 6, name: 'hermes-hug', description: '专用于 Hugging Face 的 hermes 部署方案。', tags: 'Hugging,AI', stars: 97, language: 'Shell', language_color: '#563d7c', url: 'https://github.com/yutianqq/hermes-hug', icon: 'fa-brands fa-github' },
 ];
 
 const DEFAULT_RESOURCES = [
-  { id: 0, title: '青云志导航', description: '个人导航站点，可注册账户，或私有化部署。', category: 'nav', icon: 'fa-solid fa-compass', url: 'https://weby.netlib.re' },
-  { id: 1, title: 'MoonTV', description: '免费的在线视频网站。', category: 'video', icon: 'fa-solid fa-circle-play', url: 'https://moon.qyun.nyc.mn' },
-  { id: 2, title: '域名邮箱', description: '可长期使用的免费域名邮箱。', category: 'email', icon: 'fa-solid fa-envelope', url: 'https://mail.v360.pp.ua/' },
-  { id: 3, title: 'WebSSH', description: '在线SSH连接工具。', category: 'ssh', icon: 'fa-solid fa-crosshairs', url: 'https://ssh.yuzong.nyc.mn' },
-  { id: 4, title: '订阅转换', description: '在线订阅转换工具，支持 clash、sing-box 等格式。', category: 'sub', icon: 'fa-solid fa-arrows-to-dot', url: 'https://sub.ccwu.cc' },
-  { id: 5, title: '优选订阅', description: '精选大量优质中转IP，加速你的CF节点。', category: 'sub', icon: 'fa-solid fa-diagram-next', url: 'https://sub.ais.sld.tw/sub' },
-  { id: 6, title: '兰空图床', description: '二开美化的兰空图床。', category: 'images', icon: 'fa-solid fa-images', url: 'https://img.811520.xyz' },
-  { id: 7, title: '封面制作', description: '为博客文章制作精美的封面。', category: 'images', icon: 'fa-solid fa-layer-group', url: 'https://cover.811520.xyz' },
-  { id: 8, title: '每日bing图', description: '每日自动更新 Bing 壁纸，提供精美高清图片。', category: 'images', icon: 'fa-brands fa-square-xing', url: 'https://bing.by.ccwu.cc' },
+  { id: 1, title: '青云志导航', description: '个人导航站点，可注册账户，或私有化部署。', category: 'nav', icon: 'fa-solid fa-compass', url: 'https://weby.netlib.re' },
+  { id: 2, title: 'MoonTV', description: '免费的在线视频网站。', category: 'video', icon: 'fa-solid fa-circle-play', url: 'https://moon.qyun.nyc.mn' },
+  { id: 3, title: '域名邮箱', description: '可长期使用的免费域名邮箱。', category: 'email', icon: 'fa-solid fa-envelope', url: 'https://mail.v360.pp.ua/' },
+  { id: 4, title: 'WebSSH', description: '在线SSH连接工具。', category: 'ssh', icon: 'fa-solid fa-crosshairs', url: 'https://ssh.yuzong.nyc.mn' },
+  { id: 5, title: '订阅转换', description: '在线订阅转换工具，支持 clash、sing-box 等格式。', category: 'sub', icon: 'fa-solid fa-arrows-to-dot', url: 'https://sub.ccwu.cc' },
+  { id: 6, title: '优选订阅', description: '精选大量优质中转IP，加速你的CF节点。', category: 'sub', icon: 'fa-solid fa-diagram-next', url: 'https://sub.ais.sld.tw/sub' },
+  { id: 7, title: '兰空图床', description: '二开美化的兰空图床。', category: 'images', icon: 'fa-solid fa-images', url: 'https://img.811520.xyz' },
+  { id: 8, title: '封面制作', description: '为博客文章制作精美的封面。', category: 'images', icon: 'fa-solid fa-layer-group', url: 'https://cover.811520.xyz' },
+  { id: 9, title: '每日bing图', description: '每日自动更新 Bing 壁纸，提供精美高清图片。', category: 'images', icon: 'fa-brands fa-square-xing', url: 'https://bing.by.ccwu.cc' },
 ];
 
 const DEFAULT_SOCIALS = [
-  { id: 0, name: 'GitHub', handle: '@yutian81', url: 'https://github.com/yutian81', icon: 'fa-brands fa-github' },
-  { id: 1, name: 'Telegram', handle: '@yutian88881', url: 'https://t.me/yutian88881', icon: 'fa-brands fa-telegram' },
-  { id: 2, name: 'Bilibili', handle: '@雨天-狂奔', url: 'https://space.bilibili.com/677845115', icon: 'fa-brands fa-bilibili' },
-  { id: 3, name: 'Email', handle: '@yutian81', url: 'mailto:admin@24811213.xyz', icon: 'fa-solid fa-envelope' },
+  { id: 1, name: 'GitHub', handle: '@yutian81', url: 'https://github.com/yutian81', icon: 'fa-brands fa-github' },
+  { id: 2, name: 'Telegram', handle: '@yutian88881', url: 'https://t.me/yutian88881', icon: 'fa-brands fa-telegram' },
+  { id: 3, name: 'Bilibili', handle: '@雨天-狂奔', url: 'https://space.bilibili.com/677845115', icon: 'fa-brands fa-bilibili' },
+  { id: 4, name: 'Email', handle: '@yutian81', url: 'mailto:admin@24811213.xyz', icon: 'fa-solid fa-envelope' },
 ];
 
 // ── 密码哈希（PBKDF2 + 随机盐）──
