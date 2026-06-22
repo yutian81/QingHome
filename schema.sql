@@ -1,4 +1,4 @@
--- QingHome2 D1 Database Schema
+-- QingHome D1 Database Schema
 -- 与 worker/index.js ensureTables() 保持一致
 
 CREATE TABLE IF NOT EXISTS admin_users (

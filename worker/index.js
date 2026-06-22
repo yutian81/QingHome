@@ -1,5 +1,5 @@
 /**
- * QingHome2 Worker
+ * QingHome Worker
  */
 
 // ── 模块级初始化标志（仅首次请求建表）──
@@ -257,7 +257,7 @@ async function handleRequest(request, env) {
       // 缓存过期或不存在，请求 GitHub
       try {
         const res = await fetch(`https://api.github.com/repos/${repo}`, {
-          headers: { 'User-Agent': 'qinghome2/1.0', 'Accept': 'application/vnd.github.v3+json' },
+          headers: { 'User-Agent': 'qinghome/1.0', 'Accept': 'application/vnd.github.v3+json' },
         });
         if (res.ok) {
           const data = await res.json();
@@ -385,7 +385,7 @@ export default {
       if (response) return response;
       return env.ASSETS && env.ASSETS.fetch(request);
     } catch (err) {
-      console.error('QingHome2 Error:', err.message);
+      console.error('QingHome Error:', err.message);
       return json({ error: '服务器内部错误' }, 500);
     }
   },
