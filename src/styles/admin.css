@@ -355,6 +355,25 @@
   flex: 1;
 }
 
+/* ---------- 表单 2 列网格（桌面色，手机媒体查询覆盖为 1 列） ---------- */
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+}
+
+/* ---------- 图标+文字统一间距 ---------- */
+.admin-icon-gap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-hicon-gap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 768px) {
   .admin-sidebar {
@@ -389,14 +408,4 @@
   .admin-form-grid {
     grid-template-columns: 1fr;
   }
-}
-
-/* ---------- 资料表单 2 列布局 ---------- */
-.admin-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 24px;
-}
-.admin-form-grid .admin-field:nth-last-child(2) {
-  grid-column: 1 / -1;
 }

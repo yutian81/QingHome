@@ -64,8 +64,8 @@ function ListEditor({ items, columns, title, icon, onAdd, onUpdate, onDelete }) 
   return (
     <div className="admin-section">
       <div className="admin-section-header">
-              <h3>{icon && <><FaIcon icon={icon} size={15} /> {title}</>}</h3>
-              <button className="admin-btn small" onClick={startAdd}><FaIcon icon="fa-solid fa-plus" size={12} /> 新增</button>
+              <h3>{icon && <span className="admin-hicon-gap"><FaIcon icon={icon} size={15} /> {title}</span>}</h3>
+              <button className="admin-btn small" onClick={startAdd}><span className="admin-icon-gap"><FaIcon icon="fa-solid fa-plus" size={12} /> 新增</span></button>
             </div>
 
       {editing && (
@@ -143,7 +143,7 @@ function ChangePassword() {
 
   return (
     <div className="admin-section">
-      <div className="admin-section-header"><h3><FaIcon icon="fa-solid fa-key" size={15} /> 修改密码</h3></div>
+      <div className="admin-section-header"><h3><span className="admin-hicon-gap"><FaIcon icon="fa-solid fa-key" size={15} /> 修改密码</span></h3></div>
       {error && <div className="admin-msg error">{error}</div>}
       {msg && <div className="admin-msg success">{msg}</div>}
       <form onSubmit={handleSubmit} style={{ maxWidth: 420 }}>
@@ -217,13 +217,13 @@ function AdminDashboard() {
         <nav>
           {TABS.map(t => (
             <button key={t.id} className={`admin-nav-btn ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
-              <FaIcon icon={t.icon} size={14} /> {t.label}
+             <span className="admin-icon-gap"><FaIcon icon={t.icon} size={14} /> {t.label}</span>
             </button>
           ))}
         </nav>
         <div className="admin-sidebar-bottom">
-          <Link to="/" className="admin-nav-btn"><FaIcon icon="fa-solid fa-house" size={15} /> 查看首页</Link>
-          <button className="admin-nav-btn" onClick={logout}><FaIcon icon="fa-solid fa-right-from-bracket" size={15} /> 退出登录</button>
+          <Link to="/" className="admin-nav-btn"><span className="admin-icon-gap"><FaIcon icon="fa-solid fa-house" size={15} /> 查看首页</span></Link>
+          <button className="admin-nav-btn" onClick={logout}><span className="admin-icon-gap"><FaIcon icon="fa-solid fa-right-from-bracket" size={15} /> 退出登录</span></button>
         </div>
       </aside>
 
@@ -233,7 +233,7 @@ function AdminDashboard() {
         {/* 个人资料 */}
         {tab === 'profile' && (
                   <div className="admin-section">
-                    <div className="admin-section-header"><h3><FaIcon icon="fa-solid fa-user" size={15} /> 个人资料</h3></div>
+                    <div className="admin-section-header"><h3><span className="admin-hicon-gap"><FaIcon icon="fa-solid fa-user" size={15} /> 资料</span></h3></div>
                     {!profile && <p style={{color:'var(--text-dim)',marginBottom:16}}>暂无数据，请先填写保存</p>}
                     <div className="admin-form-grid">
                       <F label="名称" value={profile?.name || ''} onChange={v => setProfile(p => ({ ...p || {}, name: v }))} placeholder="例如：青云志主页" />
