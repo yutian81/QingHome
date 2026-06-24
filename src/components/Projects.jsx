@@ -53,8 +53,8 @@ export default function Projects() {
   return (
     <Section id="projects" eyebrow="Open Source" title="开源项目" subtitle="一些被社区使用与认可的小工具" icon="fa-solid fa-code"
       action={
-        <a className="section__link" href="https://github.com/yutian81" target="_blank" rel="noreferrer">
-          访问我的 Github <IconExternal size={14} />
+        <a className="section__link" href={config?.profile?.github_url || 'https://github.com/yutian81'} target="_blank" rel="noreferrer">
+          {config?.profile?.github_label || '访问我的 Github'} <IconExternal size={14} />
         </a>
       }
     >

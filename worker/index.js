@@ -11,8 +11,10 @@ const DEFAULT_PROFILE = {
   avatar: 'https://pan.811520.xyz/icon/logo128.webp',
   title: '一个又菜又爱玩的小白',
   tagline: '用代码解决问题，用文字记录思考。',
-  bio: '这里是我记录所学、与同好交流的小小窗口，也是督促自己不断精进的自留地。\n愿每一位到访的你，都能有所收获、心生共鸣。',
+  bio: '这里是我记录所学、与同好交流的小小窗口，也是督促自己不断精进的自留地。\\n愿每一位到访的你，都能有所收获、心生共鸣。',
   email: 'admin@24811213.xyz', status: 'available',
+  blog_url: 'https://blog.notett.com', blog_label: '访问我的博客',
+  github_url: 'https://github.com/yutian81', github_label: '访问我的 Github',
 };
 
 const DEFAULT_STATS = [
@@ -143,7 +145,11 @@ async function ensureTables(env) {
   for (const sql of TABLES_SQL) {
     await env.DB.prepare(sql).run();
   }
-  // 清理过期会话
+  // 旧数据库兼容：添加新字段（忽略已存在）
+  try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN blog_url TEXT").run(); } catch {}
+  try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN blog_label TEXT").run(); } catch {}
+  try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN github_url TEXT").run(); } catch {}
+  try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN github_label TEXT").run(); } catch {}
   await env.DB.prepare("DELETE FROM sessions WHERE expires_at < datetime('now')").run();
   _initialized = true;
 }
@@ -154,8 +160,8 @@ async function seedIfEmpty(env) {
   if (count > 0) return;
 
   const stmts = [
-    env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status) VALUES (?,?,?,?,?,?,?,?)')
-      .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status),
+    env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status,blog_url,blog_label,github_url,github_label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)')
+      .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status, DEFAULT_PROFILE.blog_url, DEFAULT_PROFILE.blog_label, DEFAULT_PROFILE.github_url, DEFAULT_PROFILE.github_label),
   ];
   DEFAULT_STATS.forEach((s, i) => stmts.push(env.DB.prepare('INSERT INTO stats (label,value,icon,sort_order) VALUES (?,?,?,?)').bind(s.label, s.value, s.icon, i)));
   DEFAULT_NAV.forEach((n, i) => stmts.push(env.DB.prepare('INSERT INTO nav_items (label,icon,section_id,sort_order) VALUES (?,?,?,?)').bind(n.label, n.icon, n.section_id, i)));
@@ -284,11 +290,11 @@ async function handleRequest(request, env) {
       const data = await parseJSON(request);
       const { count } = await env.DB.prepare('SELECT COUNT(*) as count FROM profile').first();
       if (count > 0) {
-        await env.DB.prepare('UPDATE profile SET name=?,brand=?,avatar=?,title=?,tagline=?,bio=?,email=?,status=? WHERE id=(SELECT id FROM profile LIMIT 1)')
-          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status).run();
+        await env.DB.prepare('UPDATE profile SET name=?,brand=?,avatar=?,title=?,tagline=?,bio=?,email=?,status=?,blog_url=?,blog_label=?,github_url=?,github_label=? WHERE id=(SELECT id FROM profile LIMIT 1)')
+          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status, data.blog_url, data.blog_label, data.github_url, data.github_label).run();
       } else {
-        await env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status) VALUES (?,?,?,?,?,?,?,?)')
-          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status).run();
+        await env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status,blog_url,blog_label,github_url,github_label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)')
+          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status, data.blog_url, data.blog_label, data.github_url, data.github_label).run();
       }
       return json({ ok: true });
     }

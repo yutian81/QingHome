@@ -103,6 +103,10 @@ function AdminDashboard() {
               <F label="副标题" value={profile.tagline} onChange={v => setProfile(p => ({ ...p, tagline: v }))} placeholder="例如：用代码解决问题，用文字记录思考。" />
               <F label="邮箱" value={profile.email} onChange={v => setProfile(p => ({ ...p, email: v }))} type="email" placeholder="admin@example.com" />
               <F label="简介" value={profile.bio} onChange={v => setProfile(p => ({ ...p, bio: v }))} rows={3} placeholder="个人简介，支持多行文本" />
+              <F label="博客链接" value={profile.blog_url} onChange={v => setProfile(p => ({ ...p, blog_url: v }))} placeholder="https://blog.notett.com" />
+              <F label="博客按钮文字" value={profile.blog_label} onChange={v => setProfile(p => ({ ...p, blog_label: v }))} placeholder="访问我的博客" />
+              <F label="Github 链接" value={profile.github_url} onChange={v => setProfile(p => ({ ...p, github_url: v }))} placeholder="https://github.com/yutian81" />
+              <F label="Github 按钮文字" value={profile.github_label} onChange={v => setProfile(p => ({ ...p, github_label: v }))} placeholder="访问我的 Github" />
               <div className="admin-field">
                 <label htmlFor="status">状态</label>
                 <select id="status" value={profile.status} onChange={e => setProfile(p => ({ ...p, status: e.target.value }))}>

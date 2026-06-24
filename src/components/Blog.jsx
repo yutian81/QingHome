@@ -14,8 +14,8 @@ export default function Blog() {
       subtitle="把踩过的坑、想清楚的道理写下来"
       icon="fa-solid fa-feather"
       action={
-        <a className="section__link" href="https://blog.notett.com" target="_blank" rel="noreferrer">
-          访问我的博客 <IconExternal size={14} />
+        <a className="section__link" href={config?.profile?.blog_url || 'https://blog.notett.com'} target="_blank" rel="noreferrer">
+          {config?.profile?.blog_label || '访问我的博客'} <IconExternal size={14} />
         </a>
       }
     >

@@ -14,7 +14,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer__inner">
         <div className="footer__brand">
-          <span className="footer__logo">{brand.charAt(0)}</span>
+          {config?.profile?.avatar ? <img className="footer__logo-img" src={config.profile.avatar} alt={brand} /> : <span className="footer__logo">{brand.charAt(0)}</span>}
           <span>{brand}</span>
         </div>
 

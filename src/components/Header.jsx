@@ -45,7 +45,7 @@ export default function Header() {
     <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
       <div className="header__inner">
         <a href="/" className="header__brand" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-          <span className="header__logo">{brand.charAt(0)}</span>
+          {config?.profile?.avatar ? <img className="header__logo-img" src={config.profile.avatar} alt={brand} /> : <span className="header__logo">{brand.charAt(0)}</span>}
           <span className="header__name">{brand}</span>
         </a>
 
