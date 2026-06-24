@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS profile (
   tagline TEXT DEFAULT '',
   bio TEXT DEFAULT '',
   email TEXT DEFAULT '',
-  status TEXT DEFAULT 'available'
+  status TEXT DEFAULT 'available',
+  site_icon TEXT DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS stats (

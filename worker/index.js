@@ -15,6 +15,7 @@ const DEFAULT_PROFILE = {
   email: 'admin@24811213.xyz', status: 'available',
   blog_url: 'https://blog.notett.com', blog_label: '访问我的博客',
   github_url: 'https://github.com/yutian81', github_label: '访问我的 Github',
+  site_icon: 'https://pan.811520.xyz/icon/qinghome128.png',
 };
 
 const DEFAULT_STATS = [
@@ -128,7 +129,7 @@ const SECTIONS = {
 const TABLES_SQL = [
   `CREATE TABLE IF NOT EXISTS admin_users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, created_at TEXT DEFAULT (datetime('now')))`,
   `CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, token TEXT NOT NULL UNIQUE, user_id INTEGER NOT NULL, expires_at TEXT NOT NULL, created_at TEXT DEFAULT (datetime('now')))`,
-  `CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT DEFAULT '', brand TEXT DEFAULT '', avatar TEXT DEFAULT '', title TEXT DEFAULT '', tagline TEXT DEFAULT '', bio TEXT DEFAULT '', email TEXT DEFAULT '', status TEXT DEFAULT 'available')`,
+  `CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT DEFAULT '', brand TEXT DEFAULT '', avatar TEXT DEFAULT '', title TEXT DEFAULT '', tagline TEXT DEFAULT '', bio TEXT DEFAULT '', email TEXT DEFAULT '', status TEXT DEFAULT 'available', site_icon TEXT DEFAULT '')`,
   `CREATE TABLE IF NOT EXISTS stats (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT DEFAULT '', value TEXT DEFAULT '', icon TEXT DEFAULT '', sort_order INTEGER DEFAULT 0)`,
   `CREATE TABLE IF NOT EXISTS blog_posts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT DEFAULT '', excerpt TEXT DEFAULT '', date TEXT DEFAULT '', tags TEXT DEFAULT '', url TEXT DEFAULT '', sort_order INTEGER DEFAULT 0)`,
   `CREATE TABLE IF NOT EXISTS projects (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT DEFAULT '', description TEXT DEFAULT '', tags TEXT DEFAULT '', stars INTEGER DEFAULT 0, language TEXT DEFAULT '', language_color TEXT DEFAULT '', url TEXT DEFAULT '', icon TEXT DEFAULT 'fa-brands fa-github', sort_order INTEGER DEFAULT 0)`,
@@ -150,6 +151,7 @@ async function ensureTables(env) {
   try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN blog_label TEXT").run(); } catch {}
   try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN github_url TEXT").run(); } catch {}
   try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN github_label TEXT").run(); } catch {}
+  try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN site_icon TEXT").run(); } catch {}
   await env.DB.prepare("DELETE FROM sessions WHERE expires_at < datetime('now')").run();
   _initialized = true;
 }
@@ -160,8 +162,8 @@ async function seedIfEmpty(env) {
   if (count > 0) return;
 
   const stmts = [
-    env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status,blog_url,blog_label,github_url,github_label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)')
-      .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status, DEFAULT_PROFILE.blog_url, DEFAULT_PROFILE.blog_label, DEFAULT_PROFILE.github_url, DEFAULT_PROFILE.github_label),
+    env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status,blog_url,blog_label,github_url,github_label,site_icon) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
+      .bind(DEFAULT_PROFILE.name, DEFAULT_PROFILE.brand, DEFAULT_PROFILE.avatar, DEFAULT_PROFILE.title, DEFAULT_PROFILE.tagline, DEFAULT_PROFILE.bio, DEFAULT_PROFILE.email, DEFAULT_PROFILE.status, DEFAULT_PROFILE.blog_url, DEFAULT_PROFILE.blog_label, DEFAULT_PROFILE.github_url, DEFAULT_PROFILE.github_label, DEFAULT_PROFILE.site_icon),
   ];
   DEFAULT_STATS.forEach((s, i) => stmts.push(env.DB.prepare('INSERT INTO stats (label,value,icon,sort_order) VALUES (?,?,?,?)').bind(s.label, s.value, s.icon, i)));
   DEFAULT_NAV.forEach((n, i) => stmts.push(env.DB.prepare('INSERT INTO nav_items (label,icon,section_id,sort_order) VALUES (?,?,?,?)').bind(n.label, n.icon, n.section_id, i)));
@@ -290,11 +292,11 @@ async function handleRequest(request, env) {
       const data = await parseJSON(request);
       const { count } = await env.DB.prepare('SELECT COUNT(*) as count FROM profile').first();
       if (count > 0) {
-        await env.DB.prepare('UPDATE profile SET name=?,brand=?,avatar=?,title=?,tagline=?,bio=?,email=?,status=?,blog_url=?,blog_label=?,github_url=?,github_label=? WHERE id=(SELECT id FROM profile LIMIT 1)')
-          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status, data.blog_url, data.blog_label, data.github_url, data.github_label).run();
+        await env.DB.prepare('UPDATE profile SET name=?,brand=?,avatar=?,title=?,tagline=?,bio=?,email=?,status=?,blog_url=?,blog_label=?,github_url=?,github_label=?,site_icon=? WHERE id=(SELECT id FROM profile LIMIT 1)')
+          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status, data.blog_url, data.blog_label, data.github_url, data.github_label, data.site_icon).run();
       } else {
-        await env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status,blog_url,blog_label,github_url,github_label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)')
-          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status, data.blog_url, data.blog_label, data.github_url, data.github_label).run();
+        await env.DB.prepare('INSERT INTO profile (name,brand,avatar,title,tagline,bio,email,status,blog_url,blog_label,github_url,github_label,site_icon) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')
+          .bind(data.name, data.brand, data.avatar, data.title, data.tagline, data.bio, data.email, data.status, data.blog_url, data.blog_label, data.github_url, data.github_label, data.site_icon).run();
       }
       return json({ ok: true });
     }

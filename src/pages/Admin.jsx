@@ -99,7 +99,9 @@ function AdminDashboard() {
               <F label="名称" value={profile.name} onChange={v => setProfile(p => ({ ...p, name: v }))} placeholder="例如：青云志主页" />
               <F label="品牌" value={profile.brand} onChange={v => setProfile(p => ({ ...p, brand: v }))} placeholder="例如：QingHome" />
               <F label="头像 URL" value={profile.avatar} onChange={v => setProfile(p => ({ ...p, avatar: v }))} placeholder="https://example.com/avatar.png" />
+              <F label="站点图标" value={profile.site_icon} onChange={v => setProfile(p => ({ ...p, site_icon: v }))} placeholder="https://pan.811520.xyz/icon/qinghome128.png" />
               <F label="标题" value={profile.title} onChange={v => setProfile(p => ({ ...p, title: v }))} placeholder="例如：一个又菜又爱玩的小白" />
+              <F label="博客链接" value={profile.blog_url} onChange={v => setProfile(p => ({ ...p, blog_url: v }))} placeholder="https://blog.notett.com" />
               <F label="副标题" value={profile.tagline} onChange={v => setProfile(p => ({ ...p, tagline: v }))} placeholder="例如：用代码解决问题，用文字记录思考。" />
               <F label="邮箱" value={profile.email} onChange={v => setProfile(p => ({ ...p, email: v }))} type="email" placeholder="admin@example.com" />
               <F label="简介" value={profile.bio} onChange={v => setProfile(p => ({ ...p, bio: v }))} rows={3} placeholder="个人简介，支持多行文本" />
