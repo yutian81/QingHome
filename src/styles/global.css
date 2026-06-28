@@ -208,7 +208,7 @@ img { max-width: 100%; display: block; }
    BLOG
    ============================================================ */
 .blog { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.blog__item { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 26px; box-shadow: var(--shadow-sm); transition: all 0.25s ease; display: block; }
+.blog__item { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 26px; box-shadow: var(--shadow-sm); transition: all 0.25s ease; display: block; overflow: hidden; }
 .blog__meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); margin-bottom: 12px; flex-wrap: wrap; }
 .blog__tag { color: var(--brand); font-weight: 600; background: var(--brand-soft); padding: 2px 10px; border-radius: 6px; }
 .blog__date { color: var(--text-dim); font-size: 12px; white-space: nowrap; }
