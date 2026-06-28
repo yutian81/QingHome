@@ -176,11 +176,10 @@ img { max-width: 100%; display: block; }
 .cards { display: grid; gap: 20px; }
 .cards--projects { grid-template-columns: repeat(3, 1fr); }
 .cards--resources { grid-template-columns: repeat(3, 1fr); }
-
 .card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm); transition: all 0.25s ease; overflow: hidden; display: flex; flex-direction: column; }
 .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--brand), var(--brand-2)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
-.card:hover { border-color: var(--brand); box-shadow: var(--shadow-lg); transform: translateY(-4px); }
-.card:hover::before { transform: scaleX(1); }
+.card:hover, .blog__item:hover { border-color: var(--brand); box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+.card:hover::before, .blog__item:hover::before { transform: scaleX(1); }
 
 /* 项目卡片 */
 .card--project { min-height: 200px; }
@@ -210,7 +209,6 @@ img { max-width: 100%; display: block; }
    ============================================================ */
 .blog { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .blog__item { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 26px; box-shadow: var(--shadow-sm); transition: all 0.25s ease; display: block; }
-.blog__item:hover { border-color: var(--brand); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
 .blog__meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); margin-bottom: 12px; flex-wrap: wrap; }
 .blog__tag { color: var(--brand); font-weight: 600; background: var(--brand-soft); padding: 2px 10px; border-radius: 6px; }
 .blog__date { color: var(--text-dim); font-size: 12px; white-space: nowrap; }
