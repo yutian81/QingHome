@@ -14,6 +14,7 @@ function AdminDashboard() {
   const { refresh } = useSite();
   const [tab, setTab] = useState('profile');
   const [msg, setMsg] = useState(null);
+  const [profileMsg, setProfileMsg] = useState(null);
 
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState([]);
@@ -39,9 +40,15 @@ function AdminDashboard() {
   useEffect(() => { loadAll(); }, [loadAll]);
 
   const saveProfile = async () => {
-    await api.updateProfile(profile);
-    show('资料已保存');
-    refresh();
+    try {
+      await api.updateProfile(profile);
+      setProfileMsg({ text: '资料已保存', type: 'success' });
+      refresh();
+      await loadAll();
+    } catch (err) {
+      setProfileMsg({ text: err.message || '保存失败', type: 'error' });
+    }
+    setTimeout(() => setProfileMsg(null), 3000);
   };
 
   const refreshSection = async () => { await loadAll(); refresh(); };
@@ -115,7 +122,10 @@ function AdminDashboard() {
               <F label="Github 链接" value={profile.github_url} onChange={v => setProfile(p => ({ ...p, github_url: v }))} placeholder="https://github.com/yutian81" />
               <F label="Github 按钮文字" value={profile.github_label} onChange={v => setProfile(p => ({ ...p, github_label: v }))} placeholder="访问我的 Github" />
             </div>
-            <button className="admin-btn primary" onClick={saveProfile} style={{ marginTop: 16 }}>保存</button>
+            <div className="admin-save-row">
+              <button className="admin-btn primary" onClick={saveProfile}>保存</button>
+              {profileMsg && <span className={`admin-msg-inline ${profileMsg.type}`}><span className="admin-icon-gap"><FaIcon icon={profileMsg.type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-check-circle'} size={14} />{profileMsg.text}</span></span>}
+            </div>
           </div>
         )}
 

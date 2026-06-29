@@ -68,6 +68,29 @@
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
+/* ---------- 保存行（按钮+行内消息） ---------- */
+.admin-save-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.admin-msg-inline {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  gap: 6px;
+}
+
+.admin-msg-inline.success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
 /* ---------- 表单 ---------- */
 .admin-field {
   margin-bottom: 16px;
@@ -404,5 +427,10 @@
   }
   .admin-form-grid {
     grid-template-columns: 1fr;
+  }
+  .admin-save-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
