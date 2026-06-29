@@ -247,7 +247,7 @@ async function handleRequest(request, env) {
     const user = await env.DB.prepare('SELECT password_hash FROM admin_users WHERE id = ?').bind(authUser.userId).first();
     if (!(await verifyPassword(oldPassword, user.password_hash))) return json({ error: '旧密码错误' }, 401);
     const newHash = await hashPassword(newPassword);
-    await env.DB.prepare('UPDATE admin_users SET password_hash = ? WHERE id = ?').bind(newHash, user.id).run();
+    await env.DB.prepare('UPDATE admin_users SET password_hash = ? WHERE id = ?').bind(newHash, authUser.userId).run();
     return json({ ok: true });
   }
 

@@ -6,15 +6,14 @@ import Projects from '../components/Projects.jsx';
 import Resources from '../components/Resources.jsx';
 import Social from '../components/Social.jsx';
 import Footer from '../components/Footer.jsx';
-import { FaIcon } from '../components/Icons.jsx';
 
 export default function Home() {
   const { config, loading, error } = useSite();
 
   if (error) {
     return (
-      <div className="admin-loading">
-        <span className="admin-icon-gap"><FaIcon icon="fa-solid fa-circle-exclamation" size={16} />加载失败，请刷新页面</span>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--bg)' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>加载失败，请刷新页面</p>
       </div>
     );
   }
