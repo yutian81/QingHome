@@ -6,6 +6,7 @@ import Projects from '../components/Projects.jsx';
 import Resources from '../components/Resources.jsx';
 import Social from '../components/Social.jsx';
 import Footer from '../components/Footer.jsx';
+import { FaIcon } from '../components/Icons.jsx';
 
 export default function Home() {
   const { config, loading, error } = useSite();

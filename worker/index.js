@@ -404,6 +404,7 @@ export default {
       if (response) return response;
 
       // 静态资源缓存策略
+      if (!env.ASSETS) return new Response('Not Found', { status: 404 });
       const assetResponse = await env.ASSETS.fetch(request);
       if (assetResponse.ok) {
         const url = new URL(request.url);
