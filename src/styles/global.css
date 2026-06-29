@@ -172,7 +172,8 @@ img { max-width: 100%; display: block; }
   .hero__inner { flex-direction: row; gap: 60px; max-width: 960px; align-items: center; text-align: left; }
   .hero__content { order: -1; flex: 1; }
   .hero__avatar-col { margin-bottom: 0; }
-	  .hero__avatar { width: 180px; height: 180px; }
+	  .hero__avatar { width: 200px; height: 200px; }
+  .hero__status { bottom: 18px; right: 18px; }
   .hero__bio { margin-left: 0; margin-right: 0; }
   .hero__cta { justify-content: flex-start; }
   .hero__stats { justify-content: flex-start; }
