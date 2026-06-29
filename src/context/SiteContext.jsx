@@ -28,11 +28,18 @@ function saveCache(data) {
 
 export function SiteProvider({ children }) {
   const [config, setConfig] = useState(() => INITIAL_DATA || loadCache());
-  const [loading, setLoading] = useState(!config);
+  const [loading, setLoading] = useState(true); // 始终从加载中开始
   const [error, setError] = useState(null);
   const mountedRef = useRef(true);
+  const configRef = useRef(config); // 用 ref 追踪最新 config，避免闭包陈旧值
+
+  // 同步 configRef
+  useEffect(() => {
+    configRef.current = config;
+  }, [config]);
 
   const fetchConfig = useCallback(async () => {
+    setLoading(true); // 每次 fetch 都显示 spinner
     try {
       const data = await api.getPublicConfig();
       if (!mountedRef.current) return;
@@ -42,7 +49,10 @@ export function SiteProvider({ children }) {
     } catch (err) {
       if (!mountedRef.current) return;
       console.error('获取配置失败:', err);
-      setError(err.message || '加载失败');
+      // 只有完全没有数据时才显示错误页（有老数据时不弹错）
+      if (!configRef.current) {
+        setError(err.message || '加载失败');
+      }
     } finally {
       if (mountedRef.current) setLoading(false);
     }
