@@ -143,11 +143,10 @@ const TABLES_SQL = [
 
 async function ensureTables(env) {
   if (_initialized) return;
-  // 轻量检查：通过 sqlite_master 判断表是否已存在
-  const { exists } = await env.DB.prepare(
-    "SELECT COUNT(*) > 0 AS exists FROM sqlite_master WHERE type='table' AND name='profile'"
-  ).first();
-  if (!exists) {
+  // 轻量检查：尝试查询 profile 表，失败则创建
+  try {
+    await env.DB.prepare("SELECT 1 FROM profile LIMIT 1").run();
+  } catch {
     for (const sql of TABLES_SQL) {
       await env.DB.prepare(sql).run();
     }
