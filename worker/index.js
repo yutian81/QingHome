@@ -36,7 +36,7 @@ const DEFAULT_BLOG = [
   { id: 1, title: '现代化域名管理工具', excerpt: '基于 Cloudflare Worker 和 KV 构建的域名监控面板。', date: '2025-11-18', tags: 'Cloudflare,Domain', url: 'https://blog.notett.com/post/2025/11/251118-domain-check/' },
   { id: 2, title: 'Hexo 博客文章加密局部指定内容', excerpt: '加密插件 hexo-blog-encrypt 可以加密单篇文章，但不能实现局部内容加密。', date: '2025-12-24', tags: 'Hexo,Encrypt', url: 'https://blog.notett.com/post/2025/08/250809-hexo-jiami/' },
   { id: 3, title: '在 Obsidian 中使用兰空图床 API 自动传图', excerpt: 'pnpm workspace + Turborepo + Changesets 的实战落地。', date: '2025-02-18', tags: 'Obsidian,LskyPro', url: 'https://blog.notett.com/post/2024/10/lskypro-nf/' },
-  { id: 4, title: '白嫖 B2 10G 对象存储并挂载到 alist', excerpt: '让 B2 的私有桶通过 CF Worker 反代实现公开访问。', date: '2025-05-03', tags: 'backblaze,Cloudflare', url: 'https://blog.notett.com/post/2025/05/b2-bucket-mount/' },
+  { id: 4, title: '白嫖 B2 10G 对象存储并挂载到 alist', excerpt: '让 B2 的私有桶通过 CF Worker 反代实现公开访问。', date: '2025-05-03', tags: 'Backblaze,Cloudflare', url: 'https://blog.notett.com/post/2025/05/b2-bucket-mount/' },
   { id: 5, title: '免费域名资源收集', excerpt: '收集一些免费的域名资源供大家选择使用。', date: '2025-05-30', tags: 'Domain,Free', url: 'https://blog.notett.com/post/2025/05/250530-free-domain/' },
   { id: 6, title: '用 Serv00 设置域名邮箱', excerpt: 'Serv00 自带的邮箱功能能够实现收发件，同时支持 IMAP/POP/SMTP 功能。', date: '2025-06-29', tags: 'Serv00,Mail', url: 'https://blog.notett.com/post/2025/06/202506-s00-email/' },
 ];
@@ -368,26 +368,32 @@ async function logout(request, env) {
   return json({ ok: true });
 }
 
+// 返回纯数据对象（可复用：API 响应 + HTML 注入）
+async function getPublicConfigData(env) {
+	const db = env.DB;
+	const [profile, stats, navItems, blogPosts, projects, resources, socials] = await Promise.all([
+		db.prepare('SELECT * FROM profile LIMIT 1').first(),
+		db.prepare('SELECT * FROM stats ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+		db.prepare('SELECT * FROM nav_items ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+		db.prepare('SELECT * FROM blog_posts ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+		db.prepare('SELECT * FROM projects ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+		db.prepare('SELECT * FROM resources ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+		db.prepare('SELECT * FROM socials ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
+	]);
+	return {
+		profile: profile || DEFAULT_PROFILE,
+		stats: stats.length ? stats : DEFAULT_STATS,
+		navItems: navItems.length ? navItems : DEFAULT_NAV,
+		blogPosts: blogPosts.length ? blogPosts : DEFAULT_BLOG,
+		projects: projects.length ? projects : DEFAULT_PROJECTS,
+		resources: resources.length ? resources : DEFAULT_RESOURCES,
+		socials: socials.length ? socials : DEFAULT_SOCIALS,
+	};
+}
+
 async function getPublicConfig(env) {
-  const db = env.DB;
-  const [profile, stats, navItems, blogPosts, projects, resources, socials] = await Promise.all([
-    db.prepare('SELECT * FROM profile LIMIT 1').first(),
-    db.prepare('SELECT * FROM stats ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
-    db.prepare('SELECT * FROM nav_items ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
-    db.prepare('SELECT * FROM blog_posts ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
-    db.prepare('SELECT * FROM projects ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
-    db.prepare('SELECT * FROM resources ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
-    db.prepare('SELECT * FROM socials ORDER BY sort_order ASC, id ASC').all().then(r => r.results),
-  ]);
-  return json({
-    profile: profile || DEFAULT_PROFILE,
-    stats: stats.length ? stats : DEFAULT_STATS,
-    navItems: navItems.length ? navItems : DEFAULT_NAV,
-    blogPosts: blogPosts.length ? blogPosts : DEFAULT_BLOG,
-    projects: projects.length ? projects : DEFAULT_PROJECTS,
-    resources: resources.length ? resources : DEFAULT_RESOURCES,
-    socials: socials.length ? socials : DEFAULT_SOCIALS,
-  }, 200, 'public, max-age=3600');
+	const data = await getPublicConfigData(env);
+	return json(data, 200, 'public, max-age=3600');
 }
 
 export default {
@@ -412,6 +418,21 @@ export default {
           const headers = new Headers(assetResponse.headers);
           headers.set('Cache-Control', 'public, max-age=31536000, immutable');
           return new Response(assetResponse.body, { status: assetResponse.status, headers });
+        }
+        // index.html → 内嵌配置数据，省掉前端 API 请求
+        const contentType = assetResponse.headers.get('content-type') || '';
+        if (contentType.includes('text/html')) {
+          const html = await assetResponse.text();
+          const configData = await getPublicConfigData(env);
+          const safeJson = JSON.stringify(configData).replace(/<\/script>/g, '<\\/script>');
+          const injectedHtml = html.replace(
+            '<div id="root">',
+            `<script>window.__INITIAL_CONFIG__=${safeJson}</script>\n    <div id="root">`
+          );
+          const headers = new Headers(assetResponse.headers);
+          headers.set('Cache-Control', 'no-cache');
+          headers.delete('Content-Length');
+          return new Response(injectedHtml, { status: 200, headers });
         }
       }
       return assetResponse;

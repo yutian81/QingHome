@@ -6,6 +6,9 @@ const SiteContext = createContext(null);
 const CACHE_KEY = 'qinghome2_config_cache';
 const CACHE_TTL = 30 * 60 * 1000; // 30 分钟
 
+// Worker 内嵌到 HTML 中的初始数据（优先级最高）
+const INITIAL_DATA = typeof window !== 'undefined' ? window.__INITIAL_CONFIG__ : null;
+
 function loadCache() {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
@@ -24,7 +27,7 @@ function saveCache(data) {
 }
 
 export function SiteProvider({ children }) {
-  const [config, setConfig] = useState(() => loadCache());
+  const [config, setConfig] = useState(() => INITIAL_DATA || loadCache());
   const [loading, setLoading] = useState(!config);
   const [error, setError] = useState(null);
   const mountedRef = useRef(true);
