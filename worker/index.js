@@ -288,8 +288,11 @@ async function handleRequest(request, env) {
     if (!authUser) return json({ error: '未登录' }, 401);
     const sectionPath = pathname.replace('/api/admin/', '');
 
-    // GET 所有配置
-    if (sectionPath === 'config' && request.method === 'GET') return getPublicConfig(env);
+    // GET 所有配置（管理后台专有，不设 Cache-Control，避免 Cloudflare 边缘缓存带 Authorization 的响应）
+    if (sectionPath === 'config' && request.method === 'GET') {
+      const data = await getPublicConfigData(env);
+      return json(data);
+    }
 
     // Profile
     if (sectionPath === 'config/profile' && request.method === 'PUT') {
