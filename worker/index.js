@@ -143,8 +143,14 @@ const TABLES_SQL = [
 
 async function ensureTables(env) {
   if (_initialized) return;
-  for (const sql of TABLES_SQL) {
-    await env.DB.prepare(sql).run();
+  // 轻量检查：通过 sqlite_master 判断表是否已存在
+  const { exists } = await env.DB.prepare(
+    "SELECT COUNT(*) > 0 AS exists FROM sqlite_master WHERE type='table' AND name='profile'"
+  ).first();
+  if (!exists) {
+    for (const sql of TABLES_SQL) {
+      await env.DB.prepare(sql).run();
+    }
   }
   // 旧数据库兼容：添加新字段（忽略已存在）
   try { await env.DB.prepare("ALTER TABLE profile ADD COLUMN blog_url TEXT").run(); } catch {}
@@ -180,11 +186,10 @@ async function hasAdmin(env) {
   return row.count > 0;
 }
 
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  });
+function json(data, status = 200, cacheControl) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (cacheControl) headers['Cache-Control'] = cacheControl;
+  return new Response(JSON.stringify(data), { status, headers });
 }
 
 // ── 路由处理 ──
@@ -383,15 +388,33 @@ async function getPublicConfig(env) {
     projects: projects.length ? projects : DEFAULT_PROJECTS,
     resources: resources.length ? resources : DEFAULT_RESOURCES,
     socials: socials.length ? socials : DEFAULT_SOCIALS,
-  });
+  }, 200, 'public, max-age=3600');
 }
 
 export default {
+  async scheduled(event, env) {
+    // 保活：触发建表检查 + 一次空数据库查询使 D1 连接保持活跃
+    await ensureTables(env);
+    _initialized = true;
+  },
+
   async fetch(request, env) {
     try {
       const response = await handleRequest(request, env);
       if (response) return response;
-      return env.ASSETS && env.ASSETS.fetch(request);
+
+      // 静态资源缓存策略
+      const assetResponse = await env.ASSETS.fetch(request);
+      if (assetResponse.ok) {
+        const url = new URL(request.url);
+        // 带 content hash 的文件（JS/CSS/图片）→ 长期缓存
+        if (/\.[a-f0-9]{8,}\.(js|css|png|jpg|jpeg|webp|gif|svg|ico)$/i.test(url.pathname)) {
+          const headers = new Headers(assetResponse.headers);
+          headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+          return new Response(assetResponse.body, { status: assetResponse.status, headers });
+        }
+      }
+      return assetResponse;
     } catch (err) {
       console.error('QingHome Error:', err.message);
       return json({ error: '服务器内部错误' }, 500);

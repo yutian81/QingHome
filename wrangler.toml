@@ -12,3 +12,7 @@ database_name = "qinghome-db"
 binding = "ASSETS"
 directory = "./dist"
 not_found_handling = "single-page-application"
+
+# Cron 触发器：每 5 分钟保活，减少冷启动
+[triggers]
+crons = ["*/5 * * * *"]

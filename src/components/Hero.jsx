@@ -18,7 +18,7 @@ export default function Hero() {
       <div className="hero__inner">
         <div className="hero__avatar">
           {p.avatar ? (
-            <img src={p.avatar} alt={p.name} />
+            <img src={p.avatar} alt={p.name} fetchpriority="high" />
           ) : (
             <span>{initials}</span>
           )}
