@@ -3,6 +3,8 @@
 > 动态个人主页 — 基于 React + Vite + Cloudflare Workers (D1 + Static Assets)  
 > 所有配置由 D1 数据库驱动，提供可视化管理后台
 
+![1782731954345.webp](https://tgfile.yuzong.nyc.mn/1782731954345.webp)
+
 ---
 
 ## ✨ 特性
@@ -10,7 +12,6 @@
 - 🎨 **大气简约 · 卡片式设计**：渐变 Hero、毛玻璃导航、悬浮卡片、微交互动画
 - 🌗 **明暗双主题**：跟随系统偏好，一键切换，localStorage 持久化，零白屏闪烁
 - 🖼 **Font Awesome 图标**：CDN 加载 1500+ 免费图标，数据里直接写 class 即可更换
-- ⚡ **轻量产物**：JS ≈185 KB（gzip ≈59 KB），CSS ≈16 KB（gzip ≈3.9 KB）
 - 📱 **完全响应式**：桌面 3 列 → 平板 2 列 → 手机 1 列，含汉堡菜单
 - 🚀 **边缘部署**：Cloudflare Workers + Static Assets，全球 300+ 节点 CDN
 - 🗄️ **D1 数据库驱动**：所有配置存储在 D1 中，而非硬编码
