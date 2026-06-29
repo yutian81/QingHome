@@ -393,7 +393,7 @@ async function getPublicConfigData(env) {
 
 async function getPublicConfig(env) {
 	const data = await getPublicConfigData(env);
-	return json(data, 200, 'public, max-age=3600');
+	return json(data, 200, 'no-cache');
 }
 
 export default {
