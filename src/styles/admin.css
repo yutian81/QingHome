@@ -428,9 +428,4 @@
   .admin-form-grid {
     grid-template-columns: 1fr;
   }
-  .admin-save-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
 }
